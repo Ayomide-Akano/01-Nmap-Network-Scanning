@@ -27,6 +27,7 @@ Operating System:
 
 Tools:
 - Nmap
+- Hping3
 
 Target:
 - Local Virtual Machine
