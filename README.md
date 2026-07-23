@@ -7,6 +7,7 @@
 This project demonstrates how Nmap can be used to discover hosts, identify open ports, detect running services, and perform basic network reconnaissance.
 
 The objective is to understand how attackers and defenders use Nmap during security assessments.
+**Note: **Other tools might be introduced along the way.
 
 ---
 
