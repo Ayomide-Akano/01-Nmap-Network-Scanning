@@ -2033,3 +2033,269 @@ Packet size alone is rarely sufficient to evade modern security controls. Howeve
 *(Packet Size Comparison Diagram to be added later.)*
 
 ---
+
+# 7. Scan Optimization & Performance Tuning
+
+## Overview
+
+Nmap provides several options that allow security professionals to control scan speed, parallelism, timeout values, and retry behavior.
+
+Proper scan optimization helps balance:
+
+- Scan speed
+- Accuracy
+- Network impact
+- Reliability
+- Detectability
+
+The appropriate settings depend on the environment being assessed. Internal networks, cloud environments, WAN links, and high-latency networks may require different optimization strategies.
+
+---
+## Timing Templates (`-T0` to `-T5`)
+
+### Purpose
+
+Adjusts the overall speed and aggressiveness of an Nmap scan by modifying internal timing parameters.
+
+### Syntax
+
+```bash
+nmap -T<0-5> <target>
+```
+
+### Example
+
+```bash
+nmap -T4 192.168.1.15
+```
+
+### Timing Levels
+
+| Template | Name | Typical Use |
+|----------|------|-------------|
+| T0 | Paranoid | Extremely slow, minimizes network noise |
+| T1 | Sneaky | Slow scans for sensitive environments |
+| T2 | Polite | Reduces bandwidth usage |
+| T3 | Normal | Default timing |
+| T4 | Aggressive | Fast scanning on reliable networks |
+| T5 | Insane | Very fast, suitable only for stable laboratory or high-speed networks |
+
+### When to Use
+
+- Adjusting scan duration
+- Managing network impact
+- Improving scan efficiency
+
+### Advantages
+
+- Simple method for controlling scan speed.
+- Suitable for different network conditions.
+
+### Limitations
+
+- Faster scans may reduce accuracy.
+- Extremely fast scans may increase packet loss.
+- Slower scans require more time to complete.
+
+### Security Insight
+
+Choosing the correct timing template improves both efficiency and reliability. Faster is not always better; network quality and assessment objectives should guide timing decisions.
+
+### Detection & Defensive Considerations
+
+Rapid scanning generates concentrated network activity that is more likely to trigger intrusion detection or rate-limiting controls. Monitoring systems may also identify unusually slow, distributed probing over longer periods.
+
+---
+## Scan Delay (`--scan-delay`)
+
+### Purpose
+
+Introduces a delay between probe packets.
+
+### Syntax
+
+```bash
+nmap --scan-delay 500ms <target>
+```
+
+### Example
+
+```bash
+nmap --scan-delay 1s 192.168.1.15
+```
+
+### How It Works
+
+Nmap waits for the specified interval before transmitting the next probe.
+
+Supported values include:
+
+- Milliseconds
+- Seconds
+
+### When to Use
+
+- High-latency networks
+- Packet-loss troubleshooting
+- Laboratory testing
+
+### Advantages
+
+- Reduces network congestion.
+- Improves reliability on unstable links.
+
+### Limitations
+
+- Significantly increases scan duration.
+- May not improve performance on healthy networks.
+
+### Security Insight
+
+Scan delay is useful when studying network behavior or avoiding excessive load during authorized assessments. It also helps obtain more reliable results on congested links.
+
+### Detection & Defensive Considerations
+
+Long delays reduce burst traffic but do not prevent detection. Modern monitoring platforms correlate scan activity over extended periods.
+
+---
+## Host Timeout (`--host-timeout`)
+
+### Purpose
+
+Limits the maximum time Nmap spends scanning a single host before moving to the next.
+
+### Syntax
+
+```bash
+nmap --host-timeout 30s <target>
+```
+
+### Example
+
+```bash
+nmap --host-timeout 2m 192.168.1.15
+```
+
+### How It Works
+
+If the timeout is exceeded, Nmap stops scanning that host and continues with the remaining targets.
+
+### When to Use
+
+- Large network assessments
+- Slow or unreliable hosts
+- Time-constrained engagements
+
+### Advantages
+
+- Prevents scans from stalling.
+- Improves overall scan efficiency.
+
+### Limitations
+
+- May produce incomplete results.
+- Short timeout values can miss services.
+
+### Security Insight
+
+Host timeouts are useful when scanning many systems, but aggressive timeout values should be balanced against the need for complete and accurate results.
+
+### Detection & Defensive Considerations
+
+Host timeout settings primarily affect scan efficiency and do not significantly change the visibility of scan traffic.
+
+---
+## Parallelism
+
+### Purpose
+
+Controls how many probes Nmap sends simultaneously.
+
+### Syntax
+
+```bash
+nmap --min-parallelism 10 <target>
+```
+
+```bash
+nmap --max-parallelism 100 <target>
+```
+
+### How It Works
+
+Parallelism determines the number of concurrent probe operations.
+
+Higher values generally increase scan speed, while lower values reduce network load.
+
+### When to Use
+
+- Performance tuning
+- Large-scale assessments
+- Laboratory benchmarking
+
+### Advantages
+
+- Faster scanning on reliable networks.
+- Efficient use of available bandwidth.
+
+### Limitations
+
+- Excessive parallelism may overwhelm slower hosts.
+- Packet loss may reduce accuracy.
+
+### Security Insight
+
+Parallelism should match the network environment. Internal enterprise networks often tolerate higher values than remote or bandwidth-constrained environments.
+
+### Detection & Defensive Considerations
+
+Large numbers of concurrent probes can increase the likelihood of triggering rate-based detection mechanisms.
+
+---
+## Retry Controls (`--max-retries`)
+
+### Purpose
+
+Controls how many times Nmap retransmits probes that receive no response.
+
+### Syntax
+
+```bash
+nmap --max-retries <number> <target>
+```
+
+### Example
+
+```bash
+nmap --max-retries 2 192.168.1.15
+```
+
+### How It Works
+
+If a probe receives no response, Nmap retransmits it according to the configured retry limit.
+
+### When to Use
+
+- High packet-loss environments
+- Large assessments
+- Performance optimization
+
+### Advantages
+
+- Reduces unnecessary retransmissions.
+- Speeds up scanning in reliable networks.
+
+### Limitations
+
+- Lower retry values may miss services.
+- Higher retry values increase scan duration.
+
+### Security Insight
+
+Retry values should reflect expected network reliability. Reliable LANs often require fewer retries than unstable WAN connections.
+
+### Detection & Defensive Considerations
+
+Repeated retransmissions create additional traffic that may contribute to anomaly detection and log correlation.
+
+---
