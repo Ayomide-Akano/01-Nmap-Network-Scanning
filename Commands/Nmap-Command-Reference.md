@@ -245,6 +245,7 @@ See:
 `diagrams/TCP-SYN-Scan.md`
 
 for a packet-level illustration of how the TCP SYN Scan works.
+
 ---
 
 ## TCP Connect Scan (`-sT`)
@@ -312,5 +313,324 @@ See:
 `diagrams/TCP-Three-Way-Handshake.md`
 
 to understand how a complete TCP connection is established.
+
+---
+
+## UDP Scan (`-sU`)
+
+### Purpose
+
+Scans UDP ports to determine whether UDP-based services are open, closed, or filtered.
+
+Unlike TCP, UDP does not establish a connection before transmitting data, making UDP scanning slower and often more difficult to interpret.
+
+### Syntax
+
+```bash
+nmap -sU <target>
+```
+
+### Example
+
+```bash
+nmap -sU 192.168.1.15
+```
+
+### How It Works
+
+Nmap sends UDP packets to the target port.
+
+The response determines the state of the port:
+
+| Response | Port State |
+|----------|------------|
+| UDP Response | Open |
+| ICMP Port Unreachable | Closed |
+| No Response | Open \| Filtered |
+
+Because many UDP services do not respond to unexpected packets, Nmap often cannot distinguish between an open port and a filtered port when no response is received.
+
+### Common UDP Services
+
+| Port | Service |
+|------|----------|
+| 53 | DNS |
+| 67/68 | DHCP |
+| 69 | TFTP |
+| 123 | NTP |
+| 161 | SNMP |
+| 500 | IKE/IPsec |
+
+### When to Use
+
+- Identifying UDP services running on a host.
+- Assessing network infrastructure devices.
+- Enumerating DNS, SNMP, NTP, and other UDP-based protocols.
+
+### Advantages
+
+- Discovers services that TCP scans cannot detect.
+- Useful for identifying exposed infrastructure services.
+
+### Limitations
+
+- Generally slower than TCP scanning.
+- Many UDP services do not respond, making results less conclusive.
+- Firewalls frequently filter UDP traffic.
+
+### Security Insight
+
+Many organizations focus primarily on securing TCP services while overlooking UDP-based services. Misconfigured DNS, SNMP, or NTP services can expose valuable information to attackers or provide opportunities for amplification attacks.
+
+### Related Diagram
+
+*(Diagram to be added in a future update.)*
+
+---
+
+# Advanced TCP Scans
+
+## Overview
+
+Advanced TCP scans use unusual combinations of TCP flags to gather information about the state of a target port.
+
+Unlike standard TCP Connect or SYN scans, these techniques do not attempt to establish a normal TCP connection. Instead, they rely on how operating systems implement the TCP protocol as defined in RFC 793.
+
+These scan types are commonly used during penetration testing to gather information while attempting to bypass certain firewall rules or packet filtering mechanisms.
+
+> **Note**
+>
+> Modern firewalls, intrusion detection systems (IDS), intrusion prevention systems (IPS), and some operating systems may detect or respond differently to these scans. Results can vary depending on the target environment.
+
+---
+
+## ACK Scan (`-sA`)
+
+### Purpose
+
+Determines whether a firewall is filtering TCP ports rather than identifying whether ports are open or closed.
+
+Unlike SYN scans, ACK scans cannot determine if a port is open.
+
+### Syntax
+
+```bash
+nmap -sA <target>
+```
+
+### Example
+
+```bash
+nmap -sA 192.168.1.15
+```
+
+### How It Works
+
+The scanner sends a TCP packet with only the ACK flag set.
+
+The target responds as follows:
+
+| Response | Port State |
+|-----------|------------|
+| RST | Unfiltered |
+| No Response / ICMP Error | Filtered |
+
+### When to Use
+
+- Firewall rule analysis
+- Packet filtering assessment
+- Security testing
+
+### Advantages
+
+- Helps identify firewall behavior.
+- Useful for mapping filtering rules.
+
+### Limitations
+
+- Cannot determine whether a port is open.
+- Often misunderstood by beginners.
+
+### Security Insight
+
+Security professionals frequently combine ACK scans with SYN scans to distinguish firewall filtering from host availability. An ACK scan provides information about the firewall rather than the service itself.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
+
+---
+
+## FIN Scan (`-sF`)
+
+### Purpose
+
+Attempts to identify open TCP ports by sending packets with only the FIN flag set.
+
+### Syntax
+
+```bash
+nmap -sF <target>
+```
+
+### Example
+
+```bash
+nmap -sF 192.168.1.15
+```
+
+### How It Works
+
+According to RFC 793:
+
+- Closed ports respond with RST.
+- Open ports ignore the packet.
+
+Therefore:
+
+| Response | Port State |
+|-----------|------------|
+| No Response | Open \| Filtered |
+| RST | Closed |
+
+### When to Use
+
+- Firewall testing
+- IDS evaluation
+- Alternative reconnaissance methods
+
+### Advantages
+
+- May bypass simple packet filters.
+- Uses an unusual TCP flag combination.
+
+### Limitations
+
+- Ineffective against many Windows systems.
+- Modern IDS/IPS solutions often detect it.
+
+### Security Insight
+
+FIN scans rely on operating systems following RFC 793. Because Windows TCP/IP implementations typically respond differently, results are generally more reliable against Unix and Linux systems.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
+
+---
+
+## NULL Scan (`-sN`)
+
+### Purpose
+
+Attempts to identify open ports by sending a TCP packet with no flags set.
+
+### Syntax
+
+```bash
+nmap -sN <target>
+```
+
+### Example
+
+```bash
+nmap -sN 192.168.1.15
+```
+
+### How It Works
+
+The packet contains no TCP flags.
+
+According to RFC 793:
+
+| Response | Port State |
+|-----------|------------|
+| No Response | Open \| Filtered |
+| RST | Closed |
+
+### When to Use
+
+- Firewall testing
+- Packet filtering analysis
+- Operating system fingerprinting
+
+### Advantages
+
+- Uses an uncommon packet type.
+- Useful in certain penetration testing scenarios.
+
+### Limitations
+
+- Not reliable against Windows systems.
+- Many modern firewalls detect this scan.
+
+### Security Insight
+
+NULL scans work because some TCP implementations simply ignore unexpected packets sent to open ports. Modern security devices, however, frequently recognize and log this behavior.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
+
+---
+
+## XMAS Scan (`-sX`)
+
+### Purpose
+
+Attempts to identify open ports by sending packets with the FIN, PSH, and URG flags simultaneously.
+
+### Syntax
+
+```bash
+nmap -sX <target>
+```
+
+### Example
+
+```bash
+nmap -sX 192.168.1.15
+```
+
+### How It Works
+
+The TCP packet has three flags enabled:
+
+- FIN
+- PSH
+- URG
+
+This unusual combination makes the packet appear "lit up like a Christmas tree," which gives the scan its name.
+
+According to RFC 793:
+
+| Response | Port State |
+|-----------|------------|
+| No Response | Open \| Filtered |
+| RST | Closed |
+
+### When to Use
+
+- Firewall testing
+- IDS evaluation
+- TCP stack analysis
+
+### Advantages
+
+- Useful for testing how systems handle unusual TCP packets.
+- Can provide additional information during reconnaissance.
+
+### Limitations
+
+- Unreliable against Windows systems.
+- Frequently detected by modern security products.
+
+### Security Insight
+
+Although XMAS scans were historically useful for bypassing simplistic packet filters, modern enterprise firewalls and intrusion detection systems generally recognize and alert on this scanning technique.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
 
 ---
