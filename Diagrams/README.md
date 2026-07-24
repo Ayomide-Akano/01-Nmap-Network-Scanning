@@ -1,12 +1,17 @@
-# Network Diagrams
+# Network Scanning Diagrams
 
-This directory contains diagrams illustrating networking concepts used throughout this repository.
+This directory contains visual explanations of networking concepts, Nmap scanning techniques, and assessment workflows.
 
-The goal of these diagrams is to provide visual explanations of how Nmap scan techniques work at the packet level.
+Each diagram is designed to complement the command reference and playbooks by illustrating how packets flow, how scan types operate, and how assessment methodologies are structured.
 
-Current Diagrams
+Contents include:
 
-- TCP Three-Way Handshake
-- TCP SYN Scan (Half-Open Scan)
+- TCP communication
+- Port scanning techniques
+- Firewall behavior
+- Operating system detection
+- Service detection
+- NSE workflow
+- Enterprise assessment methodology
 
-Additional diagrams will be added as new scanning techniques are documented.
+These diagrams are intended for educational purposes and authorized security assessments.
