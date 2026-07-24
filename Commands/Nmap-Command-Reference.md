@@ -1606,3 +1606,430 @@ nmap --script ssl-cert,ssl-enum-ciphers 192.168.1.15
 Organizations should disable deprecated protocols such as SSLv2, SSLv3, TLS 1.0, and TLS 1.1 where appropriate, and prioritize modern TLS versions and strong cipher suites to reduce exposure to known cryptographic weaknesses.
 
 ---
+
+# 6. Firewall Evasion & Scan Optimization
+
+## Overview
+
+Firewall Evasion techniques attempt to reduce the likelihood of packet filtering devices detecting or blocking network scans.
+
+These techniques modify how packets are transmitted rather than changing the objective of the scan itself.
+
+Modern firewalls, Intrusion Detection Systems (IDS), and Intrusion Prevention Systems (IPS) are capable of detecting many of these techniques. As a result, they should be viewed as methods for understanding network behavior during authorized security testing rather than guaranteed methods of bypassing security controls.
+
+> **Important**
+>
+> These techniques should only be used in environments where you have explicit authorization to perform security testing.
+
+---
+## Packet Fragmentation (`-f`)
+
+### Purpose
+
+Splits probe packets into smaller IP fragments in an attempt to alter how network devices inspect scan traffic.
+
+### Syntax
+
+```bash
+nmap -f <target>
+```
+
+### Example
+
+```bash
+nmap -f 192.168.1.15
+```
+
+### How It Works
+
+Instead of transmitting a single packet, Nmap divides the packet into multiple smaller IP fragments.
+
+If intermediate devices or security controls do not correctly reassemble fragments before inspection, analysis may differ from that of a standard packet.
+
+### When to Use
+
+- Firewall behavior analysis
+- Security laboratory exercises
+- Network research
+
+### Advantages
+
+- Demonstrates how fragmented traffic is processed.
+- Useful for studying packet inspection behavior.
+
+### Limitations
+
+- Modern firewalls typically reassemble fragments before inspection.
+- Fragmented packets may be dropped or normalized.
+- Can increase scan time.
+
+### Security Insight
+
+Modern enterprise firewalls generally normalize fragmented traffic before applying inspection rules. Packet fragmentation is therefore more valuable as a learning and testing technique than as a reliable evasion method.
+
+### Related Diagram
+
+*(IP Fragmentation Diagram to be added later.)*
+
+---
+## Custom MTU (`--mtu`)
+
+### Purpose
+
+Specifies a custom Maximum Transmission Unit (MTU) size for fragmented scan packets.
+
+### Syntax
+
+```bash
+nmap --mtu 24 <target>
+```
+
+### Example
+
+```bash
+nmap --mtu 24 192.168.1.15
+```
+
+### How It Works
+
+Rather than using the default fragmentation size, Nmap creates packet fragments based on the specified MTU value.
+
+The MTU must typically be a multiple of 8 bytes because of how IPv4 fragmentation works.
+
+### When to Use
+
+- Fragmentation research
+- Network testing
+- Firewall evaluation
+
+### Advantages
+
+- Provides greater control over packet fragmentation.
+- Useful for packet analysis labs.
+
+### Limitations
+
+- Incorrect MTU values may cause unreliable results.
+- Modern firewalls usually normalize fragmented traffic.
+
+### Security Insight
+
+Understanding MTU behavior is valuable for troubleshooting and network engineering as well as security testing. Custom MTU values help illustrate how packet fragmentation affects transmission and inspection.
+
+---
+## Decoy Scan (`-D`)
+
+### Purpose
+
+Generates additional decoy source addresses alongside the scanner's real address to complicate attribution in scan logs.
+
+### Syntax
+
+```bash
+nmap -D RND:5 <target>
+```
+
+### Example
+
+```bash
+nmap -D RND:10 192.168.1.15
+```
+
+### How It Works
+
+Nmap sends scan traffic using the real source address together with multiple decoy addresses.
+
+From the target's perspective, the traffic appears to originate from several different IP addresses, making log analysis more complex.
+
+### When to Use
+
+- Security laboratory demonstrations
+- Firewall logging analysis
+- Authorized penetration testing
+
+### Advantages
+
+- Demonstrates how logging systems record multiple apparent sources.
+- Useful for studying attribution and logging behavior.
+
+### Limitations
+
+- Modern IDS/IPS solutions can often identify the genuine scanner.
+- Network routing and filtering may affect decoy behavior.
+- Not effective against all monitoring systems.
+
+### Security Insight
+
+Decoy scanning is best understood as a technique for studying how defensive systems log and correlate events. It should not be considered a dependable way to conceal the true origin of authorized testing.
+
+### Detection & Defensive Considerations
+
+Network defenders can detect decoy scans by correlating identical probe patterns arriving from multiple source addresses within a short period. Modern SIEM, IDS, and firewall solutions often recognize these patterns and can identify the genuine scanner through timing analysis and network correlation.
+
+### Related Diagram
+
+*(Decoy Scan Diagram to be added later.)*
+
+---
+## Idle Scan (`-sI`)
+
+### Purpose
+
+Uses a suitable idle (zombie) host to infer the state of ports on a target without sending the scan directly from the tester's system.
+
+### Syntax
+
+```bash
+nmap -sI <zombie_host> <target>
+```
+
+### Example
+
+```bash
+nmap -sI 192.168.1.10 192.168.1.20
+```
+
+### How It Works
+
+The technique relies on predictable IP ID behavior from an idle host. By observing changes in the zombie host's IP ID values before and after probes, Nmap can infer whether the target responded to the spoofed traffic.
+
+### When to Use
+
+- TCP/IP fingerprinting research
+- Security education
+- Authorized penetration testing
+
+### Advantages
+
+- Demonstrates advanced TCP/IP behavior.
+- Useful for understanding indirect scanning techniques.
+
+### Limitations
+
+- Requires a suitable idle host with predictable IP ID behavior.
+- Rarely practical in modern enterprise networks.
+- Modern operating systems often randomize IP IDs, reducing effectiveness.
+
+### Security Insight
+
+Idle scanning illustrates how protocol implementation details can influence security. Today it is primarily valuable for education and understanding network protocol behavior rather than routine assessments.
+
+---
+## Source Port Manipulation (`--source-port`)
+
+### Purpose
+
+Specifies the TCP or UDP source port used for scan packets. This is useful for analyzing how firewalls treat traffic originating from specific ports.
+
+### Syntax
+
+```bash
+nmap --source-port <port> <target>
+```
+
+### Example
+
+```bash
+nmap --source-port 53 192.168.1.15
+```
+
+### How It Works
+
+Instead of using a randomly assigned source port, Nmap sends packets using the specified source port.
+
+Some legacy firewall rules trusted traffic from well-known ports such as:
+
+- 20 (FTP Data)
+- 53 (DNS)
+- 67 (DHCP)
+- 88 (Kerberos)
+
+### When to Use
+
+- Firewall policy analysis
+- Security research
+- Network laboratory exercises
+
+### Advantages
+
+- Demonstrates how source-port filtering works.
+- Useful for evaluating legacy firewall configurations.
+
+### Limitations
+
+- Modern firewalls inspect much more than source ports.
+- Rarely bypasses properly configured security controls.
+
+### Security Insight
+
+Modern firewalls evaluate multiple packet attributes, including state, protocol behavior, application context, and reputation. Source port manipulation is therefore most valuable for understanding firewall behavior rather than avoiding detection.
+
+### Related Diagram
+
+*(Source Port Filtering Diagram to be added later.)*
+
+---
+## MAC Address Spoofing (`--spoof-mac`)
+
+### Purpose
+
+Changes the source MAC address used during scanning on the local network.
+
+### Syntax
+
+```bash
+nmap --spoof-mac <MAC|Vendor|0> <target>
+```
+
+### Examples
+
+```bash
+nmap --spoof-mac Dell 192.168.1.15
+```
+
+```bash
+nmap --spoof-mac 00:11:22:33:44:55 192.168.1.15
+```
+
+```bash
+nmap --spoof-mac 0 192.168.1.15
+```
+
+### How It Works
+
+Nmap replaces the interface's MAC address in transmitted Ethernet frames.
+
+You can specify:
+
+- A vendor name
+- A custom MAC address
+- A randomly generated MAC address
+
+### When to Use
+
+- Network access control (NAC) testing
+- Layer 2 security assessments
+- Laboratory demonstrations
+
+### Advantages
+
+- Demonstrates Layer 2 identity concepts.
+- Useful for testing MAC-based access controls.
+
+### Limitations
+
+- Effective only on the local Layer 2 network.
+- Does not affect IP addressing.
+- Switches and NAC solutions may detect anomalies.
+
+### Security Insight
+
+MAC addresses are not reliable authentication mechanisms. Organizations should rely on stronger controls such as IEEE 802.1X, certificate-based authentication, and network segmentation.
+
+### Detection & Defensive Considerations
+
+Network Access Control (NAC), DHCP snooping, Dynamic ARP Inspection (DAI), and switch port security can detect or prevent unauthorized MAC address changes on enterprise networks.
+
+### Related Diagram
+
+*(MAC Spoofing Diagram to be added later.)*
+
+---
+## Bad Checksums (`--badsum`)
+
+### Purpose
+
+Sends packets with intentionally incorrect TCP, UDP, or IP checksums.
+
+### Syntax
+
+```bash
+nmap --badsum <target>
+```
+
+### Example
+
+```bash
+nmap --badsum 192.168.1.15
+```
+
+### How It Works
+
+Nmap deliberately creates malformed packets with invalid checksums.
+
+Properly functioning hosts discard these packets, while some network devices may still process or respond to them, revealing differences in behavior.
+
+### When to Use
+
+- Firewall testing
+- IDS/IPS evaluation
+- Network protocol research
+
+### Advantages
+
+- Useful for studying packet validation.
+- Helps evaluate network device behavior.
+
+### Limitations
+
+- End hosts typically ignore invalid packets.
+- Modern security devices often recognize malformed traffic.
+
+### Security Insight
+
+Bad checksum testing demonstrates the importance of packet validation. Correctly implemented network stacks should reject corrupted packets before processing them.
+
+### Related Diagram
+
+*(Checksum Validation Diagram to be added later.)*
+
+---
+## Data Length Manipulation (`--data-length`)
+
+### Purpose
+
+Appends random data to probe packets, changing their overall size.
+
+### Syntax
+
+```bash
+nmap --data-length <bytes> <target>
+```
+
+### Example
+
+```bash
+nmap --data-length 50 192.168.1.15
+```
+
+### How It Works
+
+Nmap adds the specified number of random bytes to each probe packet.
+
+This changes the packet size while preserving the scan's intended behavior.
+
+### When to Use
+
+- IDS/IPS testing
+- Packet analysis
+- Security research
+
+### Advantages
+
+- Demonstrates how packet size affects network inspection.
+- Useful for laboratory exercises.
+
+### Limitations
+
+- Modern IDS/IPS solutions analyze packet contents in addition to packet size.
+- Larger packets increase bandwidth usage.
+
+### Security Insight
+
+Packet size alone is rarely sufficient to evade modern security controls. However, varying packet lengths is useful when studying detection logic and network traffic patterns.
+
+### Related Diagram
+
+*(Packet Size Comparison Diagram to be added later.)*
+
+---
