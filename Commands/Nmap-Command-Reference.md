@@ -158,3 +158,11 @@ This is useful when a firewall blocks host discovery probes but the target still
 Blocking ICMP does not make a system invisible. If services such as SSH, HTTP, or RDP are exposed, Nmap can still discover them using `-Pn`. This is why disabling ping responses alone is not considered a complete security measure.
 
 ---
+
+## Related Tools
+
+Nmap provides host discovery capabilities using ICMP, ARP, and TCP probes.
+
+For lower-level packet crafting and custom packet generation, see the companion repository:
+
+**02-HPING3-Packet-Crafting**
