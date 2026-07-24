@@ -1,8 +1,12 @@
-
 # Network Diagrams
 
-This directory contains diagrams used throughout the project to explain networking concepts, packet flows, and Nmap scanning techniques.
+This directory contains diagrams illustrating networking concepts used throughout this repository.
 
-Visual explanations complement the written documentation and help illustrate how different scan types work.
+The goal of these diagrams is to provide visual explanations of how Nmap scan techniques work at the packet level.
 
-As the repository grows, additional diagrams will be added for host discovery, TCP scanning, UDP scanning, firewall evasion, and other networking concepts.
+Current Diagrams
+
+- TCP Three-Way Handshake
+- TCP SYN Scan (Half-Open Scan)
+
+Additional diagrams will be added as new scanning techniques are documented.
