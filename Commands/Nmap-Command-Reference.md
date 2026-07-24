@@ -768,3 +768,130 @@ Although the Aggressive Scan is convenient, experienced penetration testers ofte
 
 ---
 
+# 4. Operating System Detection
+
+## Overview
+
+Operating System (OS) Detection attempts to identify the operating system running on a target host by analyzing how it responds to specially crafted network probes.
+
+Unlike banner grabbing, which relies on services voluntarily revealing information, OS detection uses TCP/IP fingerprinting techniques to compare a target's network behavior against Nmap's extensive fingerprint database.
+
+This capability helps security professionals understand the target environment, identify potential vulnerabilities associated with specific operating systems, and prioritize further assessment activities.
+
+---
+## Operating System Detection (`-O`)
+
+### Purpose
+
+Attempts to determine the operating system running on a target by analyzing responses to a series of specially crafted TCP, UDP, and ICMP probes.
+
+### Syntax
+
+```bash
+nmap -O <target>
+```
+
+### Example
+
+```bash
+nmap -O 192.168.1.15
+```
+
+### How It Works
+
+Nmap sends multiple carefully crafted packets to the target and analyzes characteristics of the responses, including:
+
+- TCP Initial Sequence Numbers (ISN)
+- TCP Window Size
+- TCP Options
+- Time To Live (TTL)
+- IP Identification (IP ID)
+- ICMP Error Messages
+- Response Timing
+
+These characteristics are compared against Nmap's fingerprint database to estimate the target operating system.
+
+### Example Output
+
+```text
+Device type: general purpose
+Running: Linux 5.X
+OS CPE: cpe:/o:linux:linux_kernel:5
+OS details: Linux 5.4 - 5.15
+Network Distance: 1 hop
+```
+
+### When to Use
+
+- Network reconnaissance
+- Vulnerability assessments
+- Asset identification
+- Internal security audits
+- Penetration testing
+
+### Advantages
+
+- Helps identify operating systems without authentication.
+- Assists in selecting appropriate enumeration techniques.
+- Supports vulnerability prioritization.
+
+### Limitations
+
+- Accuracy depends on the number of open and closed ports available.
+- Firewalls and packet filtering may interfere with fingerprinting.
+- Virtual machines and network devices may produce ambiguous results.
+
+### Security Insight
+
+OS detection is based on network behavior rather than explicit identification. Security controls such as firewalls, packet normalization, and TCP/IP stack modifications can reduce the accuracy of fingerprinting, making the detected operating system an educated estimate rather than a guaranteed result.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
+
+---
+
+## OS Guessing (`--osscan-guess`)
+
+### Purpose
+
+Increases the aggressiveness of operating system detection by allowing Nmap to provide its best guess when an exact fingerprint match cannot be determined.
+
+### Syntax
+
+```bash
+nmap -O --osscan-guess <target>
+```
+
+### Example
+
+```bash
+nmap -O --osscan-guess 192.168.1.15
+```
+
+### How It Works
+
+When the collected fingerprint does not closely match an entry in Nmap's fingerprint database, this option instructs Nmap to return the closest matching operating systems instead of reporting that no exact match was found.
+
+### When to Use
+
+- Unknown environments
+- Research labs
+- Internal assessments
+- Operating system fingerprint analysis
+
+### Advantages
+
+- Provides useful estimates when exact identification is not possible.
+- Helps guide further investigation.
+
+### Limitations
+
+- Results are less reliable than standard OS detection.
+- Should not be treated as definitive identification.
+
+### Security Insight
+
+Professional penetration testers use OS guessing as a starting point rather than a conclusion. Additional evidence from service banners, SMB enumeration, SSH fingerprints, and web technologies should always be combined before confidently identifying an operating system.
+
+---
