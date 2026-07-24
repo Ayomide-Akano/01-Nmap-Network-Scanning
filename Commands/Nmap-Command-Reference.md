@@ -166,3 +166,76 @@ Nmap provides host discovery capabilities using ICMP, ARP, and TCP probes.
 For lower-level packet crafting and custom packet generation, see the companion repository:
 
 **02-HPING3-Packet-Crafting**
+
+---
+
+# 2. Port Scanning
+
+## Overview
+
+Port scanning is the process of identifying open, closed, or filtered ports on a target system.
+
+An open port usually indicates that a service is actively listening for incoming connections, while a closed or filtered port may indicate that no service is available or that a firewall is restricting access.
+
+Port scanning is one of the most important phases of network reconnaissance because it helps identify the services running on a system and potential attack surfaces that may require further investigation.
+
+---
+
+## TCP SYN Scan (`-sS`)
+
+### Purpose
+
+Performs a TCP SYN scan, commonly referred to as a **half-open scan**, to identify open TCP ports without completing the full TCP three-way handshake.
+
+### Syntax
+
+```bash
+nmap -sS <target>
+```
+
+### Example
+
+```bash
+nmap -sS 192.168.1.15
+```
+
+### How It Works
+
+A TCP SYN scan sends a **SYN** packet to the target port.
+
+The response determines the state of the port:
+
+| Response | Port State |
+|----------|------------|
+| SYN/ACK | Open |
+| RST | Closed |
+| No Response or ICMP Error | Filtered |
+
+When a SYN/ACK is received, Nmap immediately sends a **RST** packet instead of completing the TCP handshake.
+
+Because the connection is never fully established, this technique is known as a **half-open scan**.
+
+### When to Use
+
+- Fast reconnaissance
+- Security assessments
+- Penetration testing
+- Internal network discovery
+
+### Advantages
+
+- Fast
+- Efficient
+- Widely supported
+- Generates less application-level logging than a full TCP connection
+
+### Limitations
+
+- Requires elevated privileges on most operating systems.
+- May still be detected by intrusion detection and intrusion prevention systems.
+
+### Security Insight
+
+The SYN scan is one of the most commonly used reconnaissance techniques because it balances speed and accuracy. Although it does not complete the TCP handshake, modern firewalls, IDS, and IPS solutions can still detect SYN scanning behavior, especially when many ports or hosts are scanned rapidly.
+
+---
