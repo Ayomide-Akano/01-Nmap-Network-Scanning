@@ -1,59 +1,26 @@
-# Basic Nmap Commands
+# Nmap Command Reference
 
-## Ping Scan
+## Overview
 
-```bash
-nmap -sn 192.168.1.0/24
-```
+This document provides a categorized reference to commonly used Nmap commands for authorized network reconnaissance, service enumeration, operating system detection, firewall evasion, and reporting.
 
-Discovers live hosts.
+The commands documented here are intended for cybersecurity learning, lab exercises, vulnerability assessments, and penetration testing conducted within authorized environments.
 
----
-
-## TCP SYN Scan
-
-```bash
-nmap -sS 192.168.1.10
-```
-
-Performs a stealth scan.
+> **Disclaimer**
+>
+> The commands in this document are provided for educational purposes and should only be used on systems or networks for which you have explicit authorization to perform security testing.
 
 ---
 
-## Service Detection
+# Table of Contents
 
-```bash
-nmap -sV 192.168.1.10
-```
-
-Identifies running services.
-
----
-
-## Operating System Detection
-
-```bash
-nmap -O 192.168.1.10
-```
-
-Attempts to identify the operating system.
+1. Host Discovery
+2. Port Scanning
+3. Service & Version Detection
+4. Operating System Detection
+5. Nmap Scripting Engine (NSE)
+6. Firewall Evasion
+7. Performance & Timing
+8. Output Formats
 
 ---
-
-## Aggressive Scan
-
-```bash
-nmap -A 192.168.1.10
-```
-
-Performs OS detection, service detection, version detection, and traceroute.
-
----
-
-## Scan All Ports
-
-```bash
-nmap -p- 192.168.1.10
-```
-
-Scans all TCP ports.
