@@ -55,6 +55,14 @@ Report/
 
 ---
 
-## Status
+## Learning Outcomes
 
-🚧 Work in Progress
+By completing this project, I gained practical experience in:
+
+- Host discovery using ICMP and ARP techniques
+- TCP and UDP port scanning
+- Service and version detection
+- Operating system fingerprinting
+- Network reconnaissance
+- Firewall evasion concepts
+- Professional security documentation
