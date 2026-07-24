@@ -634,3 +634,137 @@ Although XMAS scans were historically useful for bypassing simplistic packet fil
 *(Diagram to be added later.)*
 
 ---
+
+# 3. Service & Version Detection
+
+## Overview
+
+Once open ports have been identified, the next step is to determine which services are running on those ports and, where possible, identify their software versions.
+
+Service and version detection helps security professionals understand the technologies deployed within an environment, identify outdated software, and determine whether known vulnerabilities may affect the target.
+
+---
+## Service Version Detection (`-sV`)
+
+### Purpose
+
+Identifies the application and version of services listening on open ports.
+
+### Syntax
+
+```bash
+nmap -sV <target>
+```
+
+### Example
+
+```bash
+nmap -sV 192.168.1.15
+```
+
+### How It Works
+
+After discovering open ports, Nmap sends carefully crafted probes to each service.
+
+It then compares the responses against its service fingerprint database to identify:
+
+- Service name
+- Software version
+- Vendor
+- Sometimes the operating system
+
+### Example Output
+
+```text
+22/tcp open  ssh   OpenSSH 9.3p1 Ubuntu
+80/tcp open  http  Apache httpd 2.4.58
+443/tcp open https Apache httpd 2.4.58
+3306/tcp open mysql MySQL 8.0.39
+```
+
+### When to Use
+
+- Vulnerability assessments
+- Penetration testing
+- Asset inventory
+- Security audits
+
+### Advantages
+
+- Identifies software versions.
+- Helps prioritize vulnerabilities.
+- Improves asset visibility.
+
+### Limitations
+
+- Some services intentionally hide version information.
+- Version detection increases scan duration.
+- Firewalls or IPS devices may interfere with probes.
+
+### Security Insight
+
+Knowing that a service is running is useful. Knowing exactly which version is running is far more valuable because vulnerabilities are typically associated with specific software versions rather than the service itself.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
+
+---
+
+## Aggressive Scan (`-A`)
+
+### Purpose
+
+Performs an aggressive scan by combining several advanced Nmap features into a single command.
+
+### Syntax
+
+```bash
+nmap -A <target>
+```
+
+### Example
+
+```bash
+nmap -A 192.168.1.15
+```
+
+### What It Includes
+
+The `-A` option enables:
+
+- Operating System Detection (`-O`)
+- Service Version Detection (`-sV`)
+- Default NSE Scripts
+- Traceroute
+
+### When to Use
+
+- Comprehensive host reconnaissance
+- Security assessments
+- Internal network inventories
+- Lab environments
+
+### Advantages
+
+- Collects extensive information with a single command.
+- Saves time during reconnaissance.
+- Excellent for lab exercises and demonstrations.
+
+### Limitations
+
+- Generates more network traffic.
+- Takes longer to complete.
+- More likely to trigger IDS/IPS alerts.
+- Not suitable for stealthy assessments.
+
+### Security Insight
+
+Although the Aggressive Scan is convenient, experienced penetration testers often prefer to run individual scans separately. This provides greater control over scan speed, noise level, and the amount of information collected at each stage.
+
+### Related Diagram
+
+*(Diagram to be added later.)*
+
+---
+
