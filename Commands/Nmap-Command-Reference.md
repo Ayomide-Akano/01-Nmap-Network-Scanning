@@ -895,3 +895,714 @@ When the collected fingerprint does not closely match an entry in Nmap's fingerp
 Professional penetration testers use OS guessing as a starting point rather than a conclusion. Additional evidence from service banners, SMB enumeration, SSH fingerprints, and web technologies should always be combined before confidently identifying an operating system.
 
 ---
+
+# 5. Nmap Scripting Engine (NSE)
+
+## Overview
+
+The Nmap Scripting Engine (NSE) extends Nmap beyond traditional port scanning by allowing users to execute scripts that perform service enumeration, vulnerability detection, authentication checks, and information gathering.
+
+NSE scripts are written in the Lua programming language and are organized into categories based on their intended purpose.
+
+By combining port scanning with scripting capabilities, Nmap becomes a powerful reconnaissance and security assessment tool.
+
+---
+## Default Script Scan (`-sC`)
+
+### Purpose
+
+Runs Nmap's default set of safe NSE scripts against discovered services.
+
+### Syntax
+
+```bash
+nmap -sC <target>
+```
+
+### Example
+
+```bash
+nmap -sC 192.168.1.15
+```
+
+### How It Works
+
+The `-sC` option executes the scripts categorized as **default**, which are designed to gather useful information without causing disruption to the target system.
+
+These scripts automatically detect service-specific information and perform basic enumeration.
+
+### Typical Information Collected
+
+- HTTP Titles
+- SSH Host Keys
+- SSL Certificates
+- SMB Information
+- DNS Details
+- FTP Anonymous Login Checks
+
+### When to Use
+
+- Initial service enumeration
+- Vulnerability assessments
+- Internal security reviews
+- Authorized penetration testing
+
+### Advantages
+
+- Safe for most environments.
+- Provides valuable reconnaissance information.
+- Automatically selects appropriate scripts.
+
+### Limitations
+
+- Does not execute every available NSE script.
+- Results depend on detected services.
+
+### Security Insight
+
+The default script scan is often the next step after identifying open ports. It provides a balance between information gathering and minimizing unnecessary network traffic.
+
+--- 
+## Vulnerability Detection Scripts
+
+### Purpose
+
+Executes NSE scripts designed to identify known vulnerabilities affecting services running on the target.
+
+### Syntax
+
+```bash
+nmap --script vuln <target>
+```
+
+### Example
+
+```bash
+nmap --script vuln 192.168.1.15
+```
+
+### How It Works
+
+The `vuln` script category executes multiple vulnerability detection scripts based on the services identified during scanning.
+
+The scripts compare service behavior against known vulnerability signatures and configuration weaknesses.
+
+### Common Checks
+
+- SMB Vulnerabilities
+- SSL/TLS Weaknesses
+- HTTP Misconfigurations
+- FTP Security Issues
+- DNS Weaknesses
+
+### When to Use
+
+- Vulnerability assessments
+- Internal audits
+- Patch verification
+- Security reviews
+
+### Advantages
+
+- Automates basic vulnerability detection.
+- Saves time during assessments.
+- Integrates with standard Nmap workflows.
+
+### Limitations
+
+- Does not replace a dedicated vulnerability scanner.
+- Findings should always be verified manually.
+
+### Security Insight
+
+NSE vulnerability scripts are excellent for identifying common issues, but they should be viewed as indicators rather than proof of exploitation. Always validate findings before drawing conclusions or reporting vulnerabilities.
+
+---
+## SMB Enumeration
+
+### Purpose
+
+Collects information about SMB services exposed by Windows systems.
+
+### Syntax
+
+```bash
+nmap --script smb-enum-shares,smb-enum-users <target>
+```
+
+### Example
+
+```bash
+nmap --script smb-enum-shares,smb-enum-users 192.168.1.20
+```
+
+### Information Collected
+
+- Shared folders
+- User accounts
+- Domain information
+- SMB configuration
+- Network shares
+
+### When to Use
+
+- Active Directory assessments
+- Internal penetration tests
+- Windows network enumeration
+
+### Advantages
+
+- Provides valuable Windows reconnaissance.
+- Assists privilege escalation planning.
+
+### Limitations
+
+- Depends on SMB accessibility.
+- Access controls may limit results.
+
+### Security Insight
+
+SMB enumeration often reveals valuable information about an organization's internal network. Proper SMB configuration and access restrictions help reduce unnecessary exposure.
+
+---
+## HTTP Enumeration
+
+### Purpose
+
+Uses NSE scripts to gather information about web servers and web applications.
+
+### Syntax
+
+```bash
+nmap --script http-enum,http-title <target>
+```
+
+### Example
+
+```bash
+nmap --script http-enum,http-title 192.168.1.15
+```
+
+### Information Collected
+
+- Website title
+- Common directories
+- Default pages
+- Web technologies
+- Server banners
+
+### When to Use
+
+- Web application reconnaissance
+- Security assessments
+- Asset inventory
+
+### Advantages
+
+- Fast web reconnaissance.
+- Identifies exposed content.
+- Helps prioritize manual testing.
+
+### Limitations
+
+- Results depend on available NSE scripts.
+- Dynamic applications may require additional testing.
+
+### Security Insight
+
+HTTP enumeration often reveals administrative interfaces, exposed documentation, and default pages that can assist further security testing. Proper hardening and access controls reduce unnecessary information disclosure.
+
+---
+## SSH Enumeration
+
+### Purpose
+
+Collects information about SSH services, including supported authentication methods, host keys, encryption algorithms, and protocol configuration.
+
+### Syntax
+
+```bash
+nmap --script ssh2-enum-algos,ssh-hostkey <target>
+```
+
+### Example
+
+```bash
+nmap --script ssh2-enum-algos,ssh-hostkey 192.168.1.15
+```
+
+### Information Collected
+
+- SSH protocol version
+- Supported key exchange algorithms
+- Encryption ciphers
+- Message authentication algorithms (MACs)
+- Server host keys
+
+### When to Use
+
+- SSH security assessments
+- Cryptographic reviews
+- Hardening verification
+- Asset identification
+
+### Advantages
+
+- Identifies weak cryptographic algorithms.
+- Reveals SSH configuration details.
+- Helps verify compliance with security policies.
+
+### Limitations
+
+- Requires the SSH service to be accessible.
+- Does not test credentials or authenticate users.
+
+### Security Insight
+
+SSH enumeration helps identify outdated cryptographic algorithms and weak configurations. Organizations should disable deprecated algorithms and use modern key exchange methods to reduce exposure.
+
+---
+## FTP Enumeration
+
+### Purpose
+
+Enumerates FTP services to identify server configuration, supported features, and potential anonymous access.
+
+### Syntax
+
+```bash
+nmap --script ftp-anon,ftp-syst <target>
+```
+
+### Example
+
+```bash
+nmap --script ftp-anon,ftp-syst 192.168.1.20
+```
+
+### Information Collected
+
+- Anonymous login availability
+- FTP server software
+- Operating system information
+- Supported FTP features
+
+### When to Use
+
+- Legacy system assessments
+- File server reviews
+- Internal penetration testing
+
+### Advantages
+
+- Quickly identifies insecure FTP configurations.
+- Detects anonymous file access.
+
+### Limitations
+
+- Limited to accessible FTP services.
+- Some servers restrict banner information.
+
+### Security Insight
+
+Anonymous FTP access remains a common misconfiguration. Even read-only anonymous access may expose sensitive files, configuration backups, or software packages that assist further reconnaissance.
+
+---
+## MySQL Enumeration
+
+### Purpose
+
+Collects information about MySQL database services, including version details and server configuration.
+
+### Syntax
+
+```bash
+nmap --script mysql-info <target>
+```
+
+### Example
+
+```bash
+nmap --script mysql-info 192.168.1.25
+```
+
+### Information Collected
+
+- MySQL version
+- Protocol version
+- Capabilities
+- Authentication plugin
+- Server status
+
+### When to Use
+
+- Database security assessments
+- Infrastructure reviews
+- Asset discovery
+
+### Advantages
+
+- Identifies exposed database services.
+- Supports vulnerability assessment planning.
+
+### Limitations
+
+- Information depends on server configuration.
+- Some details may require authentication.
+
+### Security Insight
+
+Publicly exposed database servers significantly increase organizational risk. MySQL services should be restricted to trusted hosts whenever possible and protected with strong authentication and network segmentation.
+
+---
+## DNS Enumeration
+
+### Purpose
+
+Enumerates DNS services to gather information about records, name servers, and zone configuration.
+
+### Syntax
+
+```bash
+nmap --script dns-recursion,dns-service-discovery <target>
+```
+
+### Example
+
+```bash
+nmap --script dns-recursion,dns-service-discovery 192.168.1.53
+```
+
+### Information Collected
+
+- DNS recursion status
+- Name server information
+- Available DNS services
+- DNS configuration details
+
+### When to Use
+
+- Infrastructure assessments
+- DNS security reviews
+- External reconnaissance
+
+### Security Insight
+
+Open DNS recursion can be abused in amplification attacks. Proper DNS configuration helps reduce abuse and information disclosure.
+
+---
+## SNMP Enumeration
+
+### Purpose
+
+Identifies information exposed by SNMP-enabled devices such as routers, switches, printers, and servers.
+
+### Syntax
+
+```bash
+nmap --script snmp-info <target>
+```
+
+### Example
+
+```bash
+nmap --script snmp-info 192.168.1.1
+```
+
+### Information Collected
+
+- Device description
+- System uptime
+- Contact information
+- Hostname
+- Network interfaces
+
+### When to Use
+
+- Network device assessments
+- Infrastructure inventories
+- Security audits
+
+### Security Insight
+
+Default or weak SNMP community strings can expose valuable infrastructure information. Organizations should use SNMPv3 where possible and disable unnecessary public community strings.
+
+---
+## SMTP Enumeration
+
+### Purpose
+
+Enumerates SMTP servers to identify supported commands, server capabilities, and user account validation features.
+
+### Syntax
+
+```bash
+nmap --script smtp-commands,smtp-enum-users <target>
+```
+
+### Example
+
+```bash
+nmap --script smtp-commands,smtp-enum-users 192.168.1.25
+```
+
+### Information Collected
+
+- Supported SMTP commands
+- User enumeration (if permitted)
+- Mail server software
+- SMTP capabilities
+
+### When to Use
+
+- Email infrastructure assessments
+- Internal penetration testing
+- Security audits
+
+### Advantages
+
+- Identifies insecure SMTP configurations.
+- Detects exposed mail server information.
+
+### Limitations
+
+- Many modern mail servers disable user enumeration.
+- Some commands require authentication.
+
+### Security Insight
+
+Improperly configured SMTP servers may allow attackers to enumerate valid email accounts or expose unnecessary server information. Disabling unnecessary SMTP commands and restricting user enumeration helps reduce this risk.
+
+---
+## LDAP Enumeration
+
+### Purpose
+
+Collects information from LDAP services, commonly used within Active Directory environments.
+
+### Syntax
+
+```bash
+nmap --script ldap-rootdse <target>
+```
+
+### Example
+
+```bash
+nmap --script ldap-rootdse 192.168.1.30
+```
+
+### Information Collected
+
+- Domain naming contexts
+- Directory capabilities
+- Supported LDAP versions
+- Server information
+
+### When to Use
+
+- Active Directory assessments
+- Enterprise security reviews
+- Internal penetration testing
+
+### Advantages
+
+- Provides valuable domain information.
+- Supports Active Directory reconnaissance.
+
+### Limitations
+
+- Anonymous queries may be restricted.
+- Access controls affect returned information.
+
+### Security Insight
+
+Improper LDAP configuration can expose directory information useful for reconnaissance. Restrict anonymous access and apply the principle of least privilege.
+
+---
+## NFS Enumeration
+
+### Purpose
+
+Enumerates Network File System (NFS) exports available on Unix and Linux systems.
+
+### Syntax
+
+```bash
+nmap --script nfs-showmount,nfs-ls <target>
+```
+
+### Example
+
+```bash
+nmap --script nfs-showmount,nfs-ls 192.168.1.30
+```
+
+### Information Collected
+
+- Exported directories
+- File permissions
+- Accessible shares
+- NFS configuration
+
+### When to Use
+
+- Linux server assessments
+- Storage security reviews
+- Internal penetration testing
+
+### Advantages
+
+- Identifies exposed shared directories.
+- Helps assess file-sharing security.
+
+### Limitations
+
+- Depends on NFS accessibility.
+- Export permissions affect results.
+
+### Security Insight
+
+Misconfigured NFS exports may expose sensitive files or allow unauthorized access. NFS shares should be limited to trusted hosts and configured with appropriate permissions.
+
+---
+## RPC Enumeration
+
+### Purpose
+
+Enumerates Remote Procedure Call (RPC) services to identify registered programs and available network services.
+
+### Syntax
+
+```bash
+nmap --script rpcinfo <target>
+```
+
+### Example
+
+```bash
+nmap --script rpcinfo 192.168.1.40
+```
+
+### Information Collected
+
+- Registered RPC programs
+- Program numbers
+- Supported versions
+- Communication protocols
+
+### When to Use
+
+- Linux server assessments
+- NFS troubleshooting
+- Network service discovery
+
+### Advantages
+
+- Reveals services that may not be obvious from port scans alone.
+- Supports deeper infrastructure analysis.
+
+### Limitations
+
+- Information depends on RPC service availability.
+- Firewalls may restrict access.
+
+### Security Insight
+
+RPC enumeration can reveal services that expand the attack surface. Unnecessary RPC services should be disabled, and access should be limited through firewall rules.
+
+---
+## RDP Enumeration
+
+### Purpose
+
+Collects information from Remote Desktop Protocol (RDP) services running on Windows systems.
+
+### Syntax
+
+```bash
+nmap --script rdp-enum-encryption,rdp-ntlm-info <target>
+```
+
+### Example
+
+```bash
+nmap --script rdp-enum-encryption,rdp-ntlm-info 192.168.1.50
+```
+
+### Information Collected
+
+- Supported encryption methods
+- NTLM information
+- Windows build details
+- Domain information
+
+### When to Use
+
+- Windows assessments
+- Active Directory reviews
+- Remote access security audits
+
+### Advantages
+
+- Identifies RDP security settings.
+- Assists in evaluating remote access configurations.
+
+### Limitations
+
+- Requires accessible RDP service.
+- Some information may be restricted.
+
+### Security Insight
+
+RDP should be protected with Network Level Authentication (NLA), strong authentication mechanisms, and restricted network access to minimize exposure.
+
+---
+## SSL/TLS Enumeration
+
+### Purpose
+
+Enumerates SSL/TLS configurations to identify supported protocols, cipher suites, and certificate information.
+
+### Syntax
+
+```bash
+nmap --script ssl-cert,ssl-enum-ciphers <target>
+```
+
+### Example
+
+```bash
+nmap --script ssl-cert,ssl-enum-ciphers 192.168.1.15
+```
+
+### Information Collected
+
+- SSL/TLS versions
+- Supported cipher suites
+- Certificate details
+- Certificate validity
+- Key exchange methods
+
+### When to Use
+
+- HTTPS security reviews
+- Compliance assessments
+- Cryptographic audits
+
+### Advantages
+
+- Detects weak protocols and ciphers.
+- Verifies certificate configuration.
+- Supports security compliance efforts.
+
+### Limitations
+
+- Limited to services using SSL/TLS.
+- Some protocol features require manual verification.
+
+### Security Insight
+
+Organizations should disable deprecated protocols such as SSLv2, SSLv3, TLS 1.0, and TLS 1.1 where appropriate, and prioritize modern TLS versions and strong cipher suites to reduce exposure to known cryptographic weaknesses.
+
+---
