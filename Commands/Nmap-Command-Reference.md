@@ -238,4 +238,79 @@ Because the connection is never fully established, this technique is known as a 
 
 The SYN scan is one of the most commonly used reconnaissance techniques because it balances speed and accuracy. Although it does not complete the TCP handshake, modern firewalls, IDS, and IPS solutions can still detect SYN scanning behavior, especially when many ports or hosts are scanned rapidly.
 
+### Related Diagram
+
+See:
+
+`diagrams/TCP-SYN-Scan.md`
+
+for a packet-level illustration of how the TCP SYN Scan works.
+---
+
+## TCP Connect Scan (`-sT`)
+
+### Purpose
+
+Performs a full TCP connection by completing the TCP three-way handshake. This scan is typically used when elevated privileges are unavailable and a SYN scan cannot be performed.
+
+### Syntax
+
+```bash
+nmap -sT <target>
+```
+
+### Example
+
+```bash
+nmap -sT 192.168.1.15
+```
+
+### How It Works
+
+Unlike a SYN scan, a TCP Connect scan completes the full TCP handshake:
+
+1. SYN
+2. SYN/ACK
+3. ACK
+
+After the connection is established, Nmap immediately closes it.
+
+Because the operating system's networking stack performs the connection, this scan is generally more noticeable in application logs.
+
+### Port States
+
+| Response | Port State |
+|----------|------------|
+| Connection Established | Open |
+| RST | Closed |
+| No Response / ICMP Error | Filtered |
+
+### When to Use
+
+- Running Nmap without administrative or root privileges.
+- Performing basic network reconnaissance.
+- Testing connectivity to TCP services.
+
+### Advantages
+
+- Does not require raw packet privileges on most operating systems.
+- Reliable for identifying open TCP ports.
+
+### Limitations
+
+- Slower than a SYN scan.
+- Completes the TCP handshake, making it more likely to appear in server and application logs.
+
+### Security Insight
+
+A TCP Connect scan is easier for defenders to observe because it establishes a complete TCP connection. Security monitoring tools and application logs often record these connections, making this scan less stealthy than a SYN scan.
+
+### Related Diagram
+
+See:
+
+`diagrams/TCP-Three-Way-Handshake.md`
+
+to understand how a complete TCP connection is established.
+
 ---
