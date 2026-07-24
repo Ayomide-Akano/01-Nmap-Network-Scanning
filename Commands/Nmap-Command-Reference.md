@@ -116,3 +116,45 @@ Unlike ICMP, ARP traffic is essential for communication within a local network a
 Many administrators block ICMP Echo Requests to reduce network visibility. However, ARP communication is still required for local devices to communicate, making ARP Ping one of the most reliable host discovery techniques on a LAN.
 
 ---
+
+## Disable Host Discovery (`-Pn`)
+
+### Purpose
+
+Skips the host discovery phase and treats the target as if it is online, even if it does not respond to ping or ARP requests.
+
+### Syntax
+
+```bash
+nmap -Pn <target>
+```
+
+### Example
+
+```bash
+nmap -Pn 192.168.1.15
+```
+
+### How It Works
+
+Normally, Nmap first checks whether a host is online before scanning it. The `-Pn` option disables this check and proceeds directly to port scanning.
+
+This is useful when a firewall blocks host discovery probes but the target still has accessible services.
+
+### When to Use
+
+- ICMP Echo Requests are blocked.
+- The target is protected by a firewall.
+- You know the target is online and want to skip host discovery.
+
+### Notes
+
+- Can significantly increase scan time.
+- Every specified target is scanned, even if it is actually offline.
+- Commonly used during penetration tests when ICMP is filtered.
+
+### Security Insight
+
+Blocking ICMP does not make a system invisible. If services such as SSH, HTTP, or RDP are exposed, Nmap can still discover them using `-Pn`. This is why disabling ping responses alone is not considered a complete security measure.
+
+---
