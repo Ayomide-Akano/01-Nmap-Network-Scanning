@@ -2,7 +2,7 @@
 
 
 ## Overview
-In TCP connection, flags are used to indicate a particular state of connection or to provide some additional useful information like troubleshooting purposes or to handle a control of a particular connection. Most commonly used flags are "SYN", "ACK" and "FIN". Each flag corresponds to 1 bit information. 
+TCP flags are control bits in the TCP header that indicate connection state, control how a segment is handled, and support specific TCP functions.
 
 
 ---
