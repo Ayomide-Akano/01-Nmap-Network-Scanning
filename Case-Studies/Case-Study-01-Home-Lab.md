@@ -109,3 +109,51 @@ Prohibited
 ## Documentation Tools
 - Markdown
 - Visual Studio Code
+
+---
+
+## Assessment Methodology
+
+The assessment was conducted using a phased network security assessment methodology. Each phase was completed within the defined scope and according to the established rules of engagement.
+
+### Phase 1 — Network Discovery
+
+The assessment began with network discovery to identify active hosts within the authorized `192.168.1.0/24` subnet.
+
+The objective was to determine which systems were reachable before performing more detailed enumeration.
+
+### Phase 2 — Host Identification
+
+Discovered hosts were reviewed and documented to establish an initial asset inventory.
+
+Each identified host was recorded based on its IP address and, where available, hostname and inferred role.
+
+### Phase 3 — Port and Service Enumeration
+
+Active hosts were scanned for open ports and exposed services.
+
+Service and version detection were used where appropriate to determine the applications and services running on identified systems.
+
+### Phase 4 — Operating System Detection
+
+Nmap OS detection techniques were used to identify the likely operating system of discovered hosts.
+
+The results were compared with the known laboratory environment where possible.
+
+### Phase 5 — Additional Analysis
+
+Additional network analysis was performed using available tools such as Wireshark and hping3 where required.
+
+These tools were used for traffic and packet analysis only and were not used for exploitation or disruptive testing.
+
+### Phase 6 — Findings and Risk Analysis
+
+The collected information was reviewed to identify security-relevant observations, exposed services, and potential risks within the laboratory environment.
+
+Findings were documented together with their potential impact and recommended remediation or security improvements.
+
+### Phase 7 — Reporting
+
+The assessment results, supporting evidence, observations, and recommendations were consolidated into this case study.
+
+The final report provides a documented record of the assessment methodology and results. 
