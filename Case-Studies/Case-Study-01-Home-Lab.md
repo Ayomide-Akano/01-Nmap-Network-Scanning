@@ -99,12 +99,13 @@ Prohibited
 
 # Tools Used
 
+## Security Assessment Tools 
 - Nmap
 - Zenmap
 - Wireshark
 - hping3 (packet analysis only)
 
 
-# Documentation Tools
+## Documentation Tools
 - Markdown
 - Visual Studio Code
