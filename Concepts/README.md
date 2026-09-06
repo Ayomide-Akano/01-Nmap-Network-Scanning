@@ -15,3 +15,18 @@ Topics include:
 - IP Identification (IP ID)
 - ICMP Messages
 - TCP Reset (RST)
+
+---
+## Concept
+
+| Concept | Description |
+|---|---|
+| TCP Three-Way Handshake | Explains how TCP connections are established |
+| TCP Flags | Explains control flags used during TCP communication |
+| TCP Initial Sequence Number | Explains sequence numbering and its relevance to fingerprinting |
+| TCP Window Size | Explains TCP flow control and fingerprinting relevance |
+| TCP Options | Explains TCP options observed during network communication |
+| TTL | Explains packet lifetime and its use in network analysis |
+| IP Identification | Explains the IP ID field and its relevance to traffic analysis |
+| ICMP Messages | Explains ICMP responses used during host discovery |
+| TCP Reset | Explains RST behavior and how it relates to port scanning |
