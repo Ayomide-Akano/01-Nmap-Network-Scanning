@@ -17,7 +17,6 @@ The commands documented here are intended for cybersecurity learning, lab exerci
 - NSE (Nmap Scripting Engine)
 - Firewall Evasion Techniques And Optimization
 - Scan Optimization and Performance Tuning
-- Timing Templates
 - Output Formats
 
 ## Purpose
