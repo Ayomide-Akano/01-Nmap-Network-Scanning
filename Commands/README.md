@@ -15,7 +15,8 @@ The commands documented here are intended for cybersecurity learning, lab exerci
 - Service Enumeration
 - Operating System Detection
 - NSE (Nmap Scripting Engine)
-- Firewall Evasion Techniques
+- Firewall Evasion Techniques And Optimization
+- Scan Optimization and Performance Tuning
 - Timing Templates
 - Output Formats
 
