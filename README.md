@@ -163,4 +163,3 @@ owner or authorized administrator.
 - [Reports](./report/)
 - [Screenshots](./Screenshots/)
 - [References](./References/)
-- [Resources](./Resources/)
