@@ -101,9 +101,6 @@ Before beginning this lab, the reader should have:
 ├── References/
 │   └── ...
 │
-├── Resources/
-│   └── ...
-│
 ├── Screenshots/
 │   └── ...
 │
