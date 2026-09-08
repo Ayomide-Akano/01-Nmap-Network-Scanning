@@ -1,4 +1,4 @@
-# Playbook 01 - Network Discovery
+# Scenario 01 — Host Discovery & Network Mapping
 
 ## Objective
 
