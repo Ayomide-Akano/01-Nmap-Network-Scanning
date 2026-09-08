@@ -1,840 +1,1102 @@
-# Scenario 01 — Host Discovery & Network Mapping
+# Practical Scanning Scenario 01 — Host Discovery & Network Mapping
 
 ## Objective
 
-Perform a structured network reconnaissance assessment against an authorized **Metasploitable 2** laboratory system.
+The objective of this assessment is to perform network discovery and reconnaissance against an intentionally vulnerable Metasploitable 2 system within an authorized laboratory environment.
 
-The assessment progresses from host discovery to port scanning, service identification, operating system detection, and default NSE enumeration.
+The assessment demonstrates how Nmap can be used to:
 
-The objective is to demonstrate how Nmap can be used to:
+- Identify active hosts on a network
+- Identify exposed TCP services
+- Enumerate service versions
+- Identify the target operating system
+- Perform basic NSE enumeration
+- Collect security-relevant evidence
+- Analyze exposed services
+- Document security observations
+- Produce a professional security assessment
 
-- Identify reachable hosts
-- Identify open, closed, and filtered ports
-- Determine running services
-- Identify service versions
-- Estimate the target operating system
-- Collect additional information using Nmap's default NSE scripts
-- Document and interpret reconnaissance findings
-
-> **Authorization:** This assessment is performed against a deliberately vulnerable Metasploitable 2 virtual machine in an authorized laboratory environment. No unauthorized systems are being scanned.
+> **Authorization Notice:** This assessment was performed against a deliberately vulnerable laboratory system owned and controlled for security testing and educational purposes.
 
 ---
 
 # Lab Environment
 
-## Target System
+## Network Configuration
 
-| Attribute | Value |
+The Metasploitable 2 virtual machine was configured using a **Bridged Adapter** so that it could communicate directly with the Linux scanning machine on the same local network.
+
+| Component | Value |
 |---|---|
-| Target | Metasploitable 2 |
-| Target IP | `192.168.43.56` |
-| Assessment Tool | Nmap |
-| Assessment Type | Network Reconnaissance |
-| Environment | Authorized Virtual Lab |
+| Network | `192.168.43.0/24` |
+| Metasploitable 2 | `192.168.43.56` |
+| Scanning Machine | `192.168.43.155` |
+| Gateway / Network Device | `192.168.43.1` |
+| Network Mode | Bridged |
+| Target Platform | Metasploitable 2 |
+| Scanner | Nmap 7.99 |
 
-## Assessment Scope
+The scanning machine was identified during host discovery as:
 
-The assessment is limited to the Metasploitable 2 virtual machine at:
+```text
+Saint (192.168.43.155)
+```
+
+The target system was identified as:
 
 ```text
 192.168.43.56
 ```
+
+---
+
+# Assessment Scope
+
+The assessment focused on the following target:
+
+```text
+192.168.43.56
+```
+
+The following activities were performed:
+
+1. Host discovery
+2. TCP port scanning
+3. Service and version detection
+4. Operating system detection
+5. NSE-based enumeration
+6. Security observation and analysis
+
+No exploitation was performed as part of this scenario.
+
 ---
 
 # Assessment Workflow
 
-```
-Determine Lab Network
-        │
-        ▼
-Host Discovery
-        │
-        ▼
+The assessment followed this workflow:
+
+```text
+Network Discovery
+       ↓
+Host Identification
+       ↓
 TCP Port Scanning
-        │
-        ▼
-Service & Version Detection
-        │
-        ▼
+       ↓
+Service Enumeration
+       ↓
 Operating System Detection
-        │
-        ▼
-Default NSE Enumeration
-        │
-        ▼
+       ↓
+NSE Enumeration
+       ↓
 Evidence Collection
-        │
-        ▼
-Analysis & Documentation
+       ↓
+Security Analysis
+       ↓
+Case Study Documentation
 ```
 
 ---
 
-# Step 1 - Host Discovery
+# Step 1 — Network Discovery
 
-## Goal
+## Objective
 
-Before performing network-wide host discovery, identify the network interface and subnet used by the Nmap assessment machine.
+The first stage was to identify active hosts within the local laboratory network.
 
-This prevents the assessment from relying on an assumed network range.
+The network range assessed was:
 
-### Linux
-
-Identify the active network interfaces:
-```
-ip addr
+```text
+192.168.43.0/24
 ```
 
-View the routing table:
-```
-ip route
-```
-### Windows
+## Command
 
-Display the network configuration:
-```
-ipconfig
-```
-
-### Evidence
-
-Record:
-
-- Nmap scanning machine IP address
-- Network interface
-- Subnet
-- Default gateway where applicable
-- Route used to reach 192.168.43.56
-
-### Why This Step Matters
-
-Understanding the local network topology helps determine the correct scope for host discovery and explains how the scanning machine communicates with the Metasploitable 2 target.
-
----
-
-# Step 2 — Host Discovery
-
-## Goal
-
-Identify active hosts within the authorized laboratory network.
-
-### Command
-
-Once the correct lab subnet has been confirmed, perform a ping scan against that subnet.
-
-For example, if the lab network is confirmed to be **192.168.43.0/24:**
-```
+```bash
 nmap -sn 192.168.43.0/24
 ```
-> Important: Use the subnet confirmed from your network configuration. Do not assume **192.168.43.0/24** if your lab configuration shows a different network.
 
-### Expected Information
+## Observed Results
 
-The scan may identify:
-- Hosts that are reachable
-- IP addresses
-- Hostnames where available
-- MAC addresses where Nmap can obtain them
+Nmap identified three active hosts:
 
-### Evidence
+| IP Address | Hostname | Status | MAC / Vendor |
+|---|---|---|---|
+| `192.168.43.1` | — | Up | Unknown |
+| `192.168.43.56` | — | Up | Oracle VirtualBox virtual NIC |
+| `192.168.43.155` | `Saint` | Up | Local scanning machine |
 
-Record the actual output from the scan.
+The target system was confirmed as:
 
-Host discovery results:
+```text
+192.168.43.56
+```
 
-> Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 23:04 +0100\
-Nmap scan report for 192.168.43.1\
-Host is up (0.043s latency).\
-MAC Address: 16:11:14:81:F0:22 (Unknown)\
-**Nmap scan report for 192.168.43.56**\
-**Host is up (0.00098s latency).**\
-**MAC Address: 08:00:27:DB:2A:1B (Oracle VirtualBox virtual NIC)**\
-Nmap scan report for Saint (192.168.43.155)\
-Host is up.\
-Nmap done: 256 IP addresses (3 hosts up) scanned in 3.19 seconds\
+## Evidence
 
+```text
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 23:04 +0100
 
-### Analysis
+Nmap scan report for 192.168.43.1
+Host is up (0.043s latency).
+MAC Address: 16:11:14:81:F0:22 (Unknown)
 
-After completing the scan, record:
-| Host | IP Address | Status |MAC Address| Notes |
-|---|---|---|---|---|
-| TBD | TBD| TBD | TBD | TBD |
+Nmap scan report for 192.168.43.56
+Host is up (0.00098s latency).
+MAC Address: 08:00:27:DB:2A:1B (Oracle VirtualBox virtual NIC)
 
+Nmap scan report for Saint (192.168.43.155)
+Host is up.
 
+Nmap done: 256 IP addresses (3 hosts up) scanned in 3.19 seconds
+```
 
+## Analysis
 
-### Why This Step Matters
+The discovery scan confirmed that the Metasploitable 2 system was reachable from the Linux scanning machine.
 
-Host discovery establishes which systems are reachable before performing more detailed scanning.
-
-In a larger environment, this can reduce unnecessary scanning traffic and help establish an initial asset inventory.
-
-### Security Insight
-
-Host discovery provides an initial view of the systems exposed within a network segment.
-
-From a defensive perspective, unexpected hosts discovered during an assessment may indicate:
-
-- Unknown assets
-- Misconfigured devices
-- Unauthorized systems
-- Poor network segmentation
+The target's VirtualBox MAC address also provided additional confirmation that the host was the intended virtual laboratory machine.
 
 ---
 
-# Step 3 — TCP Port Scanning
+# Step 2 — TCP Port Scanning
 
-## Goal
+## Objective
 
-Identify TCP ports that are open, closed, or filtered on the Metasploitable 2 target.
+After confirming the target was reachable, a TCP SYN scan was performed to identify exposed TCP services.
 
-### Command
+## Command
 
 ```bash
 nmap -sS 192.168.43.56
 ```
 
-### What This Scan Does
+## Results
 
-The TCP SYN scan sends SYN probes to TCP ports and analyzes the responses to determine their state.
+Nmap identified **23 open TCP ports**.
 
-Common results include:
+| Port | State | Service |
+|---:|---|---|
+| `21/tcp` | Open | FTP |
+| `22/tcp` | Open | SSH |
+| `23/tcp` | Open | Telnet |
+| `25/tcp` | Open | SMTP |
+| `53/tcp` | Open | DNS |
+| `80/tcp` | Open | HTTP |
+| `111/tcp` | Open | RPCBind |
+| `139/tcp` | Open | NetBIOS |
+| `445/tcp` | Open | Microsoft-DS / SMB |
+| `512/tcp` | Open | exec |
+| `513/tcp` | Open | login |
+| `514/tcp` | Open | shell |
+| `1099/tcp` | Open | Java RMI Registry |
+| `1524/tcp` | Open | Ingreslock / Bind Shell |
+| `2049/tcp` | Open | NFS |
+| `2121/tcp` | Open | FTP |
+| `3306/tcp` | Open | MySQL |
+| `5432/tcp` | Open | PostgreSQL |
+| `5900/tcp` | Open | VNC |
+| `6000/tcp` | Open | X11 |
+| `6667/tcp` | Open | IRC |
+| `8009/tcp` | Open | AJP13 |
+| `8180/tcp` | Open | HTTP / Unknown |
 
-- State	Meaning
-- Open	An application is listening on the port
-- Closed	The host is reachable but no application is listening
-- Filtered	Filtering prevents Nmap from determining the port state
+Nmap reported:
 
-### Evidence
+```text
+Not shown: 977 closed tcp ports (reset)
+```
 
-Record the actual scan output:
+## Analysis
 
-TCP scan results:
+The target exposes a large number of network services compared with a typical hardened server.
 
-> Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 23:10 +0100\
-Nmap scan report for 192.168.43.56\
-Host is up (0.00018s latency).\
-Not shown: 977 closed tcp ports (reset)\
-PORT     STATE SERVICE\
-21/tcp   open  ftp\
-22/tcp   open  ssh\
-23/tcp   open  telnet\
-25/tcp   open  smtp\
-53/tcp   open  domain\
-80/tcp   open  http\
-111/tcp  open  rpcbind\
-139/tcp  open  netbios-ssn\
-445/tcp  open  microsoft-ds\
-512/tcp  open  exec\
-513/tcp  open  login\
-514/tcp  open  shell\
-1099/tcp open  rmiregistry\
-1524/tcp open  ingreslock\
-2049/tcp open  nfs\
-2121/tcp open  ccproxy-ftp\
-3306/tcp open  mysql\
-5432/tcp open  postgresql\
-5900/tcp open  vnc\
-6000/tcp open  X11\
-6667/tcp open  irc\
-8009/tcp open  ajp13\
-8180/tcp open  unknown\
-MAC Address: 08:00:27:DB:2A:1B (Oracle VirtualBox virtual NIC)\
+The exposed services span several categories:
 
-Nmap done: 1 IP address (1 host up) scanned in 0.87 seconds\
+- Remote administration
+- File transfer
+- Web services
+- Database services
+- Network file sharing
+- Remote desktop
+- RPC services
+- Mail services
+- IRC
+- Java application services
 
+This significantly increases the system's attack surface.
 
-### Analysis
-
-After running the scan, identify:
-
-- Number of open ports
-- Important exposed ports
-- Unexpected services
-- Closed ports
-- Filtered ports, if present
-
-Record the findings:
-
-| Port | Protocol | State | Service | Observation |
-|---|---|---|---|---|
-| TBD	| TCP	| TBD	| TBD	| TBD |
-| TBD	| TCP	| TBD	| TBD	| TBD |
-| TBD | TCP | TBD	| TBD	| TBD |
-
-### Why This Step Matters
-
-Every exposed network service represents part of the system's attack surface.
-
-Identifying open ports provides the foundation for subsequent service enumeration and security assessment.
-
-### Security Insight
-
-An open port does not automatically mean that a vulnerability exists.
-
-It indicates that a network service is accessible and may require further investigation.
-
+Several services, including Telnet, FTP, VNC, SMB, NFS, database services, and legacy remote-login services, require additional security review.
 
 ---
 
-# Step 4 — Service & Version Detection
+# Step 3 — Service and Version Enumeration
 
-## Goal
+## Objective
 
-Determine which applications and service versions are running on the discovered open ports.
+Service detection was performed to identify the applications and versions running on the discovered ports.
 
-### Command
-```
+## Command
+
+```bash
 nmap -sV 192.168.43.56
 ```
 
-### Expected Information
+## Results
 
-Nmap may identify:
+| Port | Service | Detected Version |
+|---:|---|---|
+| `21/tcp` | FTP | vsftpd 2.3.4 |
+| `22/tcp` | SSH | OpenSSH 4.7p1 Debian 8ubuntu1 |
+| `23/tcp` | Telnet | Linux telnetd |
+| `25/tcp` | SMTP | Postfix smtpd |
+| `53/tcp` | DNS | ISC BIND 9.4.2 |
+| `80/tcp` | HTTP | Apache httpd 2.2.8 |
+| `111/tcp` | RPCBind | 2 |
+| `139/tcp` | NetBIOS | Samba 3.X - 4.X |
+| `445/tcp` | SMB | Samba 3.X - 4.X |
+| `512/tcp` | exec | Unidentified |
+| `513/tcp` | login | OpenBSD or Solaris rlogind |
+| `514/tcp` | shell | Unidentified |
+| `1099/tcp` | Java RMI | GNU Classpath grmiregistry |
+| `1524/tcp` | Bind Shell | Metasploitable root shell |
+| `2049/tcp` | NFS | Versions 2–4 |
+| `2121/tcp` | FTP | ProFTPD 1.3.1 |
+| `3306/tcp` | MySQL | 5.0.51a-3ubuntu5 |
+| `5432/tcp` | PostgreSQL | 8.3.0–8.3.7 |
+| `5900/tcp` | VNC | Protocol 3.3 |
+| `6000/tcp` | X11 | Access denied |
+| `6667/tcp` | IRC | UnrealIRCd |
+| `8009/tcp` | AJP13 | Apache Jserv Protocol v1.3 |
+| `8180/tcp` | HTTP | Apache Tomcat 5.5 |
 
-- Service name
-- Service version
-- Application information
-- Protocol information
-- Product/vendor information where available
+## Service Information
 
-### Evidence
+Nmap identified the target as running Linux/Unix-based services.
 
-Record the actual output:
+The scan reported:
 
-Service detection results:
-> Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 23:16 +0100\
-Nmap scan report for 192.168.43.56\
-Host is up (0.00023s latency).\
-Not shown: 977 closed tcp ports (reset)\
-PORT     STATE SERVICE     VERSION\
-21/tcp   open  ftp         vsftpd 2.3.4\
-22/tcp   open  ssh         OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)\
-23/tcp   open  telnet      Linux telnetd\
-25/tcp   open  smtp        Postfix smtpd\
-53/tcp   open  domain      ISC BIND 9.4.2\
-80/tcp   open  http        Apache httpd 2.2.8 ((Ubuntu) DAV/2)\
-111/tcp  open  rpcbind     2 (RPC #100000)\
-139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)\
-445/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)\
-512/tcp  open  exec?\
-513/tcp  open  login       OpenBSD or Solaris rlogind\
-514/tcp  open  shell?\
-1099/tcp open  java-rmi    GNU Classpath grmiregistry\
-1524/tcp open  bindshell   Metasploitable root shell\
-2049/tcp open  nfs         2-4 (RPC #100003)\
-2121/tcp open  ftp         ProFTPD 1.3.1\
-3306/tcp open  mysql       MySQL 5.0.51a-3ubuntu5\
-5432/tcp open  postgresql  PostgreSQL DB 8.3.0 - 8.3.7\
-5900/tcp open  vnc         VNC (protocol 3.3)\
-6000/tcp open  X11         (access denied)\
-6667/tcp open  irc         UnrealIRCd\
-8009/tcp open  ajp13       Apache Jserv (Protocol v1.3)\
-8180/tcp open  http        Apache Tomcat/Coyote JSP engine 1.1\
-1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :\
-SF-Port514-TCP:V=7.99%I=7%D=9/8%Time=6AA08932%P=x86_64-pc-linux-gnu%r(NULL\
-SF:,2C,"\x01Couldn't\x20get\x20address\x20for\x20your\x20host\x20\(Saint\)\
-SF:\n");\
-MAC Address: 08:00:27:DB:2A:1B (Oracle VirtualBox virtual NIC)\
-Service Info: Hosts:  metasploitable.localdomain, irc.Metasploitable.LAN; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel\
-\
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .\
-Nmap done: 1 IP address (1 host up) scanned in 138.31 seconds\
+```text
+Service Info:
+Hosts: metasploitable.localdomain, irc.Metasploitable.LAN
+OSs: Unix, Linux
+CPE: cpe:/o:linux:linux_kernel
+```
 
+## Analysis
 
-### Analysis
+The service enumeration stage revealed that the target contains numerous legacy applications and protocols.
 
-For each significant service, document:
+Examples include:
 
-| Port | Service | Version | Security Observation |
-|---|---|---|---|
+- `vsftpd 2.3.4`
+- `OpenSSH 4.7p1`
+- `Apache 2.2.8`
+- `BIND 9.4.2`
+- `Samba 3.0.x`
+- `MySQL 5.0.51a`
+- `PostgreSQL 8.3.x`
+- `Apache Tomcat 5.5`
+- `UnrealIRCd`
 
-TBD | TBD | TBD | TBD |
-TBD | TBD | TBD | TBD |
-TBD | TBD | TBD | TBD |
-TBD | TBD | TBD | TBD |
+The age and number of these services indicate a significantly outdated system and a broad attack surface.
 
-
-### Why This Step Matters
-
-Knowing that a port is open is only the beginning of an assessment.
-
-Identifying the software and version provides additional context for determining:
-
-- Whether the software is outdated
-- Whether the service is unnecessarily exposed
-- Whether additional enumeration is appropriate
-- Whether a known vulnerability may warrant further investigation
-
-> Important: A detected software version alone does not prove that a vulnerability exists. Vulnerability claims require additional evidence.
-
-### Security Insight
-
-Service enumeration allows an assessor to move from simply identifying an exposed port to understanding what application is responsible for that exposure.
-
-This information can later be correlated with vendor documentation, security advisories, and vulnerability databases.
+However, service-version detection alone does not prove that a particular vulnerability is exploitable. Further validation would be required before making an exploitability claim.
 
 ---
 
-# Step 5 — Operating System Detection
-## Goal
+# Step 4 — Operating System Detection
 
-Estimate the operating system and device characteristics of the target.
+## Objective
 
-### Command
-```
+Nmap OS detection was used to estimate the operating system and kernel family of the target.
+
+## Command
+
+```bash
 nmap -O 192.168.43.56
 ```
 
-### Expected Information
+## Results
 
-Nmap may provide:
+Nmap reported:
 
-- Operating system family
-- OS version estimates
-- Kernel information where detectable
-- Device type
-- Network distance
-- OS confidence information
+```text
+Device type: general purpose
+Running: Linux 2.6.X
+OS CPE: cpe:/o:linux:linux_kernel:2.6
+OS details: Linux 2.6.9 - 2.6.33
+Network Distance: 1 hop
+```
 
-### Evidence
+## Analysis
 
-Record the actual output:
+The target was identified as a general-purpose Linux system running a kernel in the Linux 2.6.x family.
 
-Operating system detection results:
-> Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 23:21 +0100\
-Nmap scan report for 192.168.43.56\
-Host is up (0.00087s latency).\
-Not shown: 977 closed tcp ports (reset)\
-PORT     STATE SERVICE\
-21/tcp   open  ftp\
-22/tcp   open  ssh\
-23/tcp   open  telnet\
-25/tcp   open  smtp\
-53/tcp   open  domain\
-80/tcp   open  http\
-111/tcp  open  rpcbind\
-139/tcp  open  netbios-ssn\
-445/tcp  open  microsoft-ds\
-512/tcp  open  exec\
-513/tcp  open  login\
-514/tcp  open  shell\
-1099/tcp open  rmiregistry\
-1524/tcp open  ingreslock\
-2049/tcp open  nfs\
-2121/tcp open  ccproxy-ftp\
-3306/tcp open  mysql\
-5432/tcp open  postgresql\
-5900/tcp open  vnc\
-6000/tcp open  X11\
-6667/tcp open  irc\
-8009/tcp open  ajp13\
-8180/tcp open  unknown\
-MAC Address: 08:00:27:DB:2A:1B (Oracle VirtualBox virtual NIC)\
-**Device type: general purpose**\
-**Running: Linux 2.6.X**\
-**OS CPE: cpe:/o:linux:linux_kernel:2.6**\
-**OS details: Linux 2.6.9 - 2.6.33**\
-**Network Distance: 1 hop**\
-\
-**OS detection performed. Please report any incorrect results at https://nmap.org/submit/ .**\
-Nmap done: 1 IP address (1 host up) scanned in 2.39 seconds\
+The operating-system result is an Nmap fingerprinting estimate rather than absolute proof of the exact kernel version.
 
-
-### Analysis
-
-Document:
-
-- Detected/estimated operating system:
-
-*TBD*
-
-- Device type:
-
-*TBD*
-
-- Network distance:
-
-*TBD*
-
-- Additional observations:
-
-*TBD*
-
-
-### Why This Step Matters
-
-Operating system identification provides additional context for understanding the target and selecting appropriate security controls or follow-up assessment techniques.
-
-### Security Insight
-
-OS detection is an estimate, not definitive proof of the operating system.
-
-Results can be affected by:
-
-- Firewalls
-- Packet filtering
-- Network conditions
-- Insufficient response data
-- Customized or unusual network stacks
-
-Therefore, OS detection results should be treated as an assessment indicator rather than absolute confirmation.
-
+The result is consistent with the expected operating system of the Metasploitable 2 laboratory system.
 
 ---
 
-# Step 6 — Default NSE Enumeration
-## Goal
+# Step 5 — NSE Enumeration
 
-Collect additional information about discovered services using Nmap's default NSE script set.
+## Objective
 
-### Command
-```
+Nmap's default NSE scripts were used to gather additional information about selected services and network protocols.
+
+## Command
+
+```bash
 nmap -sC 192.168.43.56
 ```
 
-### What This Can Provide
+## Key Findings
 
-Depending on the services exposed by the target, default NSE scripts may provide information such as:
+### 5.1 Anonymous FTP Access
 
-- Service-specific details
-- HTTP information
-- SSH information
-- SSL/TLS information
-- SMB information
-- DNS information
-- Other protocol-specific metadata
+Nmap identified anonymous FTP access:
 
-The exact results depend on the services discovered on the target.
+```text
+21/tcp open ftp
 
-### Evidence
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+```
 
-Record the actual output:
+The FTP service also reported:
 
-Default NSE results:
-> Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-08 23:24 +0100\
-Nmap scan report for 192.168.43.56\
-Host is up (0.00089s latency).\
-Not shown: 977 closed tcp ports (reset)\
-PORT     STATE SERVICE\
-21/tcp   open  ftp\
-|_ftp-anon: Anonymous FTP login allowed (FTP code 230)\
-| ftp-syst: \
-|   STAT: \
-| FTP server status:\
-|      Connected to 192.168.43.155\
-|      Logged in as ftp\
-|      TYPE: ASCII\
-|      No session bandwidth limit\
-|      Session timeout in seconds is 300\
-|      Control connection is plain text\
-|      Data connections will be plain text\
-|      vsFTPd 2.3.4 - secure, fast, stable\
-|_End of status\
-22/tcp   open  ssh\
-| ssh-hostkey: \
-|   1024 60:0f:cf:e1:c0:5f:6a:74:d6:90:24:fa:c4:d5:6c:cd (DSA)\
-|_  2048 56:56:24:0f:21:1d:de:a7:2b:ae:61:b1:24:3d:e8:f3 (RSA)\
-23/tcp   open  telnet\
-25/tcp   open  smtp\
-|_smtp-commands: metasploitable.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN\
-| sslv2: \
-|   SSLv2 supported\
-|   ciphers: \
-|     SSL2_RC4_128_WITH_MD5\
-|     SSL2_RC4_128_EXPORT40_WITH_MD5\
-|     SSL2_DES_192_EDE3_CBC_WITH_MD5\
-|     SSL2_DES_64_CBC_WITH_MD5\
-|     SSL2_RC2_128_CBC_EXPORT40_WITH_MD5\
-|_    SSL2_RC2_128_CBC_WITH_MD5\
-|_ssl-date: 2026-09-08T22:24:49+00:00; +2s from scanner time.\
-| ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX\
-| Not valid before: 2010-03-17T14:07:45\
-|_Not valid after:  2010-04-16T14:07:45\
-53/tcp   open  domain\
-| dns-nsid: \
-|_  bind.version: 9.4.2\
-80/tcp   open  http\
-|_http-title: Metasploitable2 - Linux\
-111/tcp  open  rpcbind\
-| rpcinfo: \
-|   program version    port/proto  service\
-|   100000  2            111/tcp   rpcbind\
-|   100000  2            111/udp   rpcbind\
-|   100003  2,3,4       2049/tcp   nfs\
-|   100003  2,3,4       2049/udp   nfs\
-|   100005  1,2,3      33192/udp   mountd\
-|   100005  1,2,3      37948/tcp   mountd\
-|   100021  1,3,4      34763/udp   nlockmgr\
-|   100021  1,3,4      54260/tcp   nlockmgr\
-|   100024  1          48504/udp   status\
-|_  100024  1          50304/tcp   status\
-139/tcp  open  netbios-ssn\
-445/tcp  open  microsoft-ds\
-512/tcp  open  exec\
-513/tcp  open  login\
-514/tcp  open  shell\
-1099/tcp open  rmiregistry\
-1524/tcp open  ingreslock\
-2049/tcp open  nfs\
-2121/tcp open  ccproxy-ftp\
-3306/tcp open  mysql\
-| mysql-info: \
-|   Protocol: 10\
-|   Version: 5.0.51a-3ubuntu5\
-|   Thread ID: 8\
-|   Capabilities flags: 43564\
-|   Some Capabilities: Support41Auth, SupportsTransactions, ConnectWithDatabase, SupportsCompression, Speaks41ProtocolNew, SwitchToSSLAfterHandshake, LongColumnFlag\
-|   Status: Autocommit\
-|_  Salt: WrW;c`84?|uV0*!geEfT\
-5432/tcp open  postgresql\
-| ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX\
-| Not valid before: 2010-03-17T14:07:45\
-|_Not valid after:  2010-04-16T14:07:45\
-|_ssl-date: 2026-09-08T22:26:14+00:00; +3s from scanner time.\
-5900/tcp open  vnc\
-| vnc-info: \
-|   Protocol version: 3.3\
-|   Security types: \
-|_    VNC Authentication (2)\
-6000/tcp open  X11\
-6667/tcp open  irc\
-| irc-info: \
-|   users: 1\
-|   servers: 1\
-|   lusers: 1\
-|   lservers: 0\
-|   server: irc.Metasploitable.LAN\
-|   version: Unreal3.2.8.1. irc.Metasploitable.LAN \
-|   uptime: 0 days, 0:30:08\
-|   source ident: nmap\
-|   source host: Test-51AE6A24\
-|_  error: Closing Link: tqcenasjs[Saint] (Quit: tqcenasjs)\
-8009/tcp open  ajp13\
-|_ajp-methods: Failed to get a valid response for the OPTION request\
-8180/tcp open  unknown\
-|_http-title: Apache Tomcat/5.5\
-|_http-favicon: Apache Tomcat\
-MAC Address: 08:00:27:DB:2A:1B (Oracle VirtualBox virtual NIC)\
-\
-Host script results:\
-| smb-os-discovery: \
-|   OS: Unix (Samba 3.0.20-Debian)\
-|   Computer name: metasploitable\
-|   NetBIOS computer name: \
-|   Domain name: localdomain\
-|   FQDN: metasploitable.localdomain\
-|_  System time: 2026-09-08T18:24:32-04:00\
-|_clock-skew: mean: 1h00m02s, deviation: 1h59m59s, median: 1s\
-|_nbstat: NetBIOS name: METASPLOITABLE, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)\
-|_smb2-time: Protocol negotiation failed (SMB2)\
-| smb-security-mode: \
-|   account_used: guest\
-|   authentication_level: user\
-|   challenge_response: supported\
-|_  message_signing: disabled (dangerous, but default)\
-\
-Nmap done: 1 IP address (1 host up) scanned in 103.25 seconds\
+```text
+Control connection is plain text
+Data connections will be plain text
+vsFTPd 2.3.4
+```
 
+### Security Observation
 
-### Analysis
+Anonymous FTP access can expose files or information to unauthenticated users depending on the server configuration.
 
-Identify interesting findings such as:
+The use of plaintext FTP also means that credentials and data transmitted through the protocol are not inherently protected by encryption.
 
-- Service banners
-- Web application information
-- Hostnames
-- Authentication-related information
-- SSL/TLS details
-- Protocol configuration information
-- Additional service metadata
+### Risk Consideration
 
-Record significant observations:
+**Risk Level: Medium**
 
-| Service | NSE Information | Security Observation|
-|---|---|---|
-| TBD	| TBD	| TBD |
-| TBD	| TBD	| TBD |
-| TBD	| TBD	| TBD |
-
-
-### Why This Step Matters
-
-Service enumeration provides additional context beyond simply identifying an open port.
-
-This information can help security professionals understand how exposed services are configured and determine appropriate follow-up investigation.
-
-> Note: NSE scripts can interact with services. Although the default script set is commonly used for enumeration, it should still be used only against systems within the authorized assessment scope.
+The actual impact depends on what files are accessible through anonymous FTP and how the service is configured.
 
 ---
 
-# Step 7 — Evidence Collection
-## Goal
+# 5.2 SSH Host Keys
 
-Preserve accurate evidence from the assessment.
+The SSH service exposed the following host keys:
 
-For each major scan, capture:
+```text
+1024 DSA
+2048 RSA
+```
 
-- Command executed
-- Target IP
-- Date and time of assessment
-- Terminal output
-- Relevant screenshots
-- Observations
-- Interpretation
+Nmap identified:
 
-### Evidence Checklist
+```text
+OpenSSH 4.7p1 Debian 8ubuntu1
+```
 
-- [ ] Network configuration recorded
-- [ ] Host discovery output captured
-- [ ] TCP scan output captured
-- [ ] Service/version scan output captured
-- [ ] OS detection output captured
-- [ ] NSE output captured
-- [ ] Screenshots collected
-- [ ] Interesting findings documented
+### Security Observation
 
+The detected OpenSSH version is significantly outdated.
 
-### Evidence Storage
+Older SSH implementations may contain known weaknesses or lack modern security improvements.
 
-Screenshots for this scenario will be stored in:
+However, the version information alone does not establish that the service is currently exploitable.
 
+---
+
+# 5.3 SMTP Enumeration
+
+The SMTP service exposed several supported commands:
+
+```text
+PIPELINING
+SIZE 10240000
+VRFY
+ETRN
+STARTTLS
+ENHANCEDSTATUSCODES
+8BITMIME
+DSN
+```
+
+Nmap also detected SSLv2 support:
+
+```text
+SSLv2 supported
+```
+
+The scan identified several SSLv2 cipher suites.
+
+### Security Observation
+
+SSLv2 is an obsolete and insecure protocol.
+
+Its presence indicates that the service supports legacy cryptographic protocols that should not normally be enabled on a modern production system.
+
+### Risk Level
+
+**Risk Level: High**
+
+The exact risk depends on whether the service is reachable from untrusted networks and whether stronger protocols are also enforced.
+
+---
+
+# 5.4 DNS Enumeration
+
+Nmap identified:
+
+```text
+ISC BIND 9.4.2
+```
+
+The DNS NSE output also returned:
+
+```text
+bind.version: 9.4.2
+```
+
+### Security Observation
+
+The detected BIND version is very old.
+
+Legacy DNS software should be reviewed for unsupported versions, known vulnerabilities, unnecessary exposure, and insecure configuration.
+
+---
+
+# 5.5 RPC and NFS Enumeration
+
+The RPC information exposed several services:
+
+```text
+rpcbind
+nfs
+mountd
+nlockmgr
+status
+```
+
+NFS was available on:
+
+```text
+2049/tcp
+2049/udp
+```
+
+### Security Observation
+
+NFS exposure can create significant security risk if exports are improperly configured.
+
+An exposed NFS service should be reviewed to determine:
+
+- Which directories are exported
+- Which hosts are permitted
+- Whether write access is allowed
+- Whether authentication controls are appropriate
+- Whether unnecessary exports are enabled
+
+The current scan confirms NFS exposure but does not by itself establish the permissions of individual exports.
+
+---
+
+# 5.6 MySQL Enumeration
+
+Nmap identified:
+
+```text
+3306/tcp open mysql
+MySQL 5.0.51a-3ubuntu5
+```
+
+The MySQL NSE script returned protocol and capability information.
+
+### Security Observation
+
+A database service exposed directly to the network increases the attack surface.
+
+The security of the service depends on authentication, network restrictions, user privileges, encryption, and database configuration.
+
+The scan confirms exposure but does not establish whether unauthorized database access is possible.
+
+---
+
+# 5.7 PostgreSQL Enumeration
+
+Nmap identified:
+
+```text
+5432/tcp open postgresql
+PostgreSQL DB 8.3.0 - 8.3.7
+```
+
+Nmap also identified an SSL certificate associated with the service.
+
+### Security Observation
+
+The detected PostgreSQL version is from an outdated software generation.
+
+Database services should generally be restricted to trusted application hosts or administrative networks rather than unnecessarily exposed to broad network segments.
+
+---
+
+# 5.8 VNC Enumeration
+
+Nmap identified:
+
+```text
+5900/tcp open vnc
+VNC (protocol 3.3)
+```
+
+The NSE scan reported:
+
+```text
+VNC Authentication (2)
+```
+
+### Security Observation
+
+VNC provides remote graphical access and should therefore be strongly restricted.
+
+The scan confirms that authentication is present, but it does not establish the strength of the configured credentials.
+
+---
+
+# 5.9 SMB Enumeration
+
+Nmap identified Samba services on:
+
+```text
+139/tcp
+445/tcp
+```
+
+The SMB enumeration returned:
+
+```text
+OS: Unix (Samba 3.0.20-Debian)
+Computer name: metasploitable
+Domain name: localdomain
+FQDN: metasploitable.localdomain
+```
+
+The SMB security mode reported:
+
+```text
+account_used: guest
+authentication_level: user
+challenge_response: supported
+message_signing: disabled
+```
+
+Nmap explicitly reported:
+
+```text
+message_signing: disabled (dangerous, but default)
+```
+
+### Security Observation
+
+SMB message signing being disabled means SMB traffic is not protected by mandatory message-signing controls.
+
+This can increase the risk of certain man-in-the-middle and SMB relay scenarios depending on the surrounding network configuration.
+
+### Risk Level
+
+**Risk Level: High**
+
+The actual exploitability and impact depend on network architecture, authentication configuration, and other security controls.
+
+---
+
+# 5.10 IRC Enumeration
+
+Nmap identified:
+
+```text
+6667/tcp open irc
+```
+
+The NSE script identified:
+
+```text
+Unreal3.2.8.1
+irc.Metasploitable.LAN
+```
+
+### Security Observation
+
+The IRC service is exposed and is running an old software version.
+
+Unnecessary legacy services should be disabled where they are not required.
+
+---
+
+# 5.11 Apache Tomcat Enumeration
+
+Nmap identified:
+
+```text
+8180/tcp open http
+Apache Tomcat/5.5
+```
+
+The service was identified as:
+
+```text
+Apache Tomcat/Coyote JSP engine 1.1
+```
+
+The AJP service was also exposed:
+
+```text
+8009/tcp open ajp13
+```
+
+### Security Observation
+
+The presence of both HTTP application services and AJP increases the application-layer attack surface.
+
+AJP should only be exposed where required and should be appropriately restricted.
+
+---
+
+# Step 6 — Security Findings
+
+Based on the evidence collected during the assessment, the following security observations were identified.
+
+| ID | Finding | Evidence | Risk |
+|---|---|---|---|
+| F-01 | Large number of exposed services | 23 open TCP ports | High |
+| F-02 | Anonymous FTP access | `ftp-anon: Anonymous FTP login allowed` | Medium |
+| F-03 | Plaintext FTP | FTP control/data connections reported as plain text | Medium |
+| F-04 | Legacy SSH implementation | OpenSSH 4.7p1 | Medium |
+| F-05 | SSLv2 supported | SMTP NSE enumeration | High |
+| F-06 | Legacy DNS implementation | BIND 9.4.2 | Medium |
+| F-07 | NFS exposed | Port 2049 and RPC enumeration | High |
+| F-08 | SMB message signing disabled | NSE reported signing disabled | High |
+| F-09 | Legacy database services exposed | MySQL 5.0.51a and PostgreSQL 8.3.x | High |
+| F-10 | VNC exposed | Port 5900 | Medium |
+| F-11 | Legacy IRC service exposed | UnrealIRCd 3.2.8.1 | Medium |
+| F-12 | Legacy Tomcat/AJP services exposed | Ports 8180 and 8009 | High |
+| F-13 | Legacy remote-access services exposed | Telnet, rlogin, rexec/rsh-related ports | High |
+
+> **Important:** Risk ratings in this document represent an initial assessment based on observed exposure and configuration. They are not a substitute for a complete vulnerability assessment or exploitation validation.
+
+---
+
+# Step 7 — Attack Surface Analysis
+
+The assessment identified a broad attack surface.
+
+## Remote Access Services
+
+The target exposes:
+
+```text
+22/tcp   SSH
+23/tcp   Telnet
+512/tcp  exec
+513/tcp  login
+514/tcp  shell
+5900/tcp VNC
+```
+
+These services provide multiple potential remote-access paths.
+
+Legacy plaintext or weakly protected remote-access protocols should generally be replaced or restricted.
+
+---
+
+## File Transfer Services
+
+The system exposes:
+
+```text
+21/tcp   FTP
+2121/tcp FTP
+```
+
+Anonymous FTP access was explicitly confirmed on port 21.
+
+This should be investigated to determine what resources are available to unauthenticated users.
+
+---
+
+## Web Services
+
+The target exposes:
+
+```text
+80/tcp
+8180/tcp
+8009/tcp
+```
+
+Detected technologies include:
+
+```text
+Apache httpd 2.2.8
+Apache Tomcat 5.5
+Apache Jserv / AJP
+```
+
+These services should be reviewed for:
+
+- Unnecessary exposure
+- Outdated software
+- Weak application configuration
+- Administrative interfaces
+- Insecure connectors
+- Missing access controls
+
+---
+
+## Database Services
+
+The following database services were exposed:
+
+```text
+3306/tcp   MySQL
+5432/tcp   PostgreSQL
+```
+
+Database services should normally be restricted to systems that require direct access.
+
+---
+
+## Network File Sharing
+
+The target exposes:
+
+```text
+139/tcp
+445/tcp
+2049/tcp
+```
+
+These correspond to SMB/NetBIOS and NFS functionality.
+
+Network file-sharing services require careful access-control configuration because excessive exposure can reveal sensitive information or provide additional attack paths.
+
+---
+
+# Step 8 — Evidence Collection
+
+The following evidence should be preserved in the repository.
+
+## Recommended Evidence Files
+
+```text
 Screenshots/
+├── 01-host-discovery.png
+├── 02-port-scan.png
+├── 03-service-version-detection.png
+├── 04-os-detection.png
+└── 05-nse-enumeration.png
+```
 
-If scan output files are generated, they can be stored with the appropriate assessment evidence.
+If terminal screenshots are captured, they should clearly show:
+
+- The Nmap command
+- Target IP address
+- Relevant output
+- Date/time where visible
+
+Screenshots should not contain unrelated personal information.
 
 ---
 
+# Step 9 — Assessment Summary
 
-# Step 8 — Document Findings
-## Finding Summary
+The assessment successfully identified the Metasploitable 2 system at:
 
-After completing the scans, summarize the results.
-
-| Category | Result |
-|---|---|
-| Target | Metasploitable 2 |
-| Target IP	| 192.168.43.56 |
-| Host Status | TBD |
-| Open TCP Ports | TBD |
-| Identified Services | TBD |
-| Service Versions | TBD |
-| Operating System | TBD |
-| NSE Observations | TBD |
-| Potential Security Concerns | TBD |
-
-## Security Observations
-
-The following section will be completed after the actual assessment.
-
-Potential areas of investigation include:
-
-- Excessively exposed network services
-- Outdated software versions
-- Insecure protocols
-- Unnecessary services
-- Weak service configurations
-- Information disclosure
-- Clear-text communication
-- Legacy protocols
-
-These are assessment categories, not confirmed vulnerabilities. Findings must be supported by evidence collected during the lab.
-
-
-### Assessment Analysis
-
-After completing the scans, answer the following questions.
-
-1. What hosts were discovered?
-
-TBD
-
-2. Which TCP ports were open?
-
-TBD
-
-3. Which services were identified?
-
-TBD
-
-4. Which service versions were detected?
-
-TBD
-
-5. What operating system did Nmap estimate?
-
-TBD
-
-6. What additional information was discovered through NSE?
-
-TBD
-
-7. Which findings require further investigation?
-
-TBD
-
-### Assessment Summary
-
-The assessment followed a structured reconnaissance workflow against the authorized Metasploitable 2 laboratory system.
-
-The process progressed from:
-
-```
-Network Identification
-        ↓
-Host Discovery
-        ↓
-Port Scanning
-        ↓
-Service Enumeration
-        ↓
-OS Detection
-        ↓
-NSE Enumeration
-        ↓
-Evidence Collection
-        ↓
-Security Analysis
+```text
+192.168.43.56
 ```
 
-The final assessment conclusions will be based exclusively on the results obtained during the practical lab.
+The target was confirmed to be reachable from the scanning machine on the same `192.168.43.0/24` network.
 
-### Lessons Learned
+Nmap identified:
 
-This scenario demonstrates that effective network reconnaissance is a progressive process.
+```text
+23 open TCP ports
+```
 
-Rather than immediately performing extensive scans, an assessment can begin by establishing network scope and identifying reachable hosts before moving toward increasingly detailed enumeration.
+Service enumeration identified numerous legacy services and software versions.
 
-The exercise also demonstrates the importance of distinguishing between:
+The NSE assessment additionally confirmed several important configuration observations, including:
 
-- What Nmap directly observed
-- What Nmap estimated
-- What requires additional investigation
-- What can and cannot be considered a confirmed vulnerability
+- Anonymous FTP access
+- Plaintext FTP communication
+- SSLv2 support
+- NFS exposure
+- SMB message signing disabled
+- Multiple legacy services
+- Exposed database services
+- Exposed remote-access services
+- Exposed web and application services
 
-Accurate interpretation is therefore just as important as executing the scanning commands.
+The system therefore presents a significantly larger attack surface than would normally be expected from a hardened production server.
 
-### Related Commands
+---
 
--sn — Host discovery
--sS — TCP SYN scanning
--sV — Service and version detection
--O — Operating system detection
--sC — Default NSE scripts
+# Step 10 — Recommendations
 
-### References
+Based on the observations from this assessment, the following security improvements are recommended.
 
-Nmap Reference Guide
-Nmap Documentation
-RFC 793 — Transmission Control Protocol
+## 1. Reduce the Attack Surface
 
-### Assessment Status
+Disable services that are not required.
 
-Status: In Progress
+Particular attention should be given to:
 
-Target: 192.168.43.5610.0.2.15
+```text
+Telnet
+FTP
+rlogin
+rexec
+rsh
+IRC
+VNC
+Unnecessary RPC services
+```
 
-Environment: Authorized Metasploitable 2 Laboratory
+---
 
->Next Action: Execute the assessment commands and replace the TBD sections with verified results and screenshots.
+## 2. Restrict Network Exposure
+
+Use firewall rules and network segmentation to ensure that services are accessible only from authorized systems.
+
+Database services such as:
+
+```text
+MySQL
+PostgreSQL
+```
+
+should not be unnecessarily exposed to untrusted networks.
+
+---
+
+## 3. Replace Insecure Protocols
+
+Where possible:
+
+- Replace Telnet with SSH
+- Replace plaintext FTP with SFTP or FTPS
+- Disable obsolete cryptographic protocols
+- Remove unnecessary legacy remote-login services
+
+---
+
+## 4. Disable SSLv2
+
+SSLv2 should be disabled and replaced with modern TLS configurations.
+
+The SMTP service should be reviewed to ensure that only secure cryptographic protocols and appropriately strong cipher suites are permitted.
+
+---
+
+## 5. Review Anonymous FTP
+
+Anonymous FTP access should be disabled unless there is a specific business requirement for it.
+
+If anonymous access is required, the accessible directory structure and permissions should be tightly restricted.
+
+---
+
+## 6. Secure SMB
+
+SMB configuration should be reviewed and message signing should be enabled where appropriate.
+
+SMB access should also be restricted to trusted hosts and network segments.
+
+---
+
+## 7. Review NFS Configuration
+
+NFS exports should be reviewed to determine:
+
+- Exported directories
+- Allowed clients
+- Read/write permissions
+- Authentication requirements
+- Unnecessary exports
+
+---
+
+## 8. Upgrade Legacy Software
+
+The assessment identified multiple legacy software versions.
+
+These should be replaced with supported versions where possible.
+
+Software requiring review includes:
+
+```text
+vsftpd 2.3.4
+OpenSSH 4.7p1
+BIND 9.4.2
+Apache 2.2.8
+Samba 3.0.x
+MySQL 5.0.51a
+PostgreSQL 8.3.x
+UnrealIRCd 3.2.8.1
+Apache Tomcat 5.5
+```
+
+---
+
+## 9. Restrict Remote Administration
+
+Remote-access services should be limited to authorized administrative networks.
+
+Strong authentication should be enforced, and unnecessary remote-access protocols should be disabled.
+
+---
+
+# Step 11 — Lessons Learned
+
+This assessment demonstrated several important principles of network security assessment.
+
+### 1. Host discovery establishes the assessment scope
+
+Before scanning services, it is important to identify which systems are actually reachable.
+
+### 2. Open ports represent attack surface
+
+An open port does not automatically mean a vulnerability exists, but every exposed service represents another component that must be secured and maintained.
+
+### 3. Version detection provides useful context
+
+Service versions help security professionals identify outdated technologies and determine which areas require further investigation.
+
+### 4. NSE provides deeper visibility
+
+NSE scripts can reveal configuration information that is not immediately visible from a basic port scan.
+
+### 5. Scan results require interpretation
+
+Nmap reports technical observations.
+
+The security professional must translate those observations into:
+
+```text
+Evidence
+   ↓
+Security Meaning
+   ↓
+Risk
+   ↓
+Recommendation
+```
+
+### 6. Evidence should support every finding
+
+Security findings should be based on observable evidence rather than assumptions.
+
+---
+
+# Assessment Limitations
+
+This assessment was limited to network reconnaissance and enumeration.
+
+The following activities were **not** performed:
+
+- Exploitation
+- Credential attacks
+- Password cracking
+- Privilege escalation
+- Persistence
+- Data extraction
+- Denial-of-service testing
+
+Therefore, the assessment does not claim that every identified service is exploitable.
+
+The findings represent observations made during network scanning and service enumeration.
+
+---
+
+# Final Assessment Conclusion
+
+The Nmap assessment successfully mapped the Metasploitable 2 laboratory target and identified a broad range of exposed services.
+
+The target exposed **23 TCP services**, including remote-access, file-transfer, web, database, network-file-sharing, and application services.
+
+Service enumeration revealed numerous legacy technologies, while NSE enumeration identified additional security-relevant configurations such as anonymous FTP access, SSLv2 support, exposed NFS functionality, and disabled SMB message signing.
+
+The assessment demonstrates how a structured Nmap workflow can progress from basic host discovery to service enumeration and security analysis.
+
+The results will be used as the technical evidence for the project's first security assessment case study.
+
+---
+
+# Related Documentation
+
+## Nmap Command Reference
+
+See:
+
+```text
+../Commands/Nmap-Command-Reference.md
+```
+
+## Nmap Concepts
+
+See:
+
+```text
+../Concepts/
+```
+
+## Nmap Diagrams
+
+See:
+
+```text
+../Diagrams/
+```
+
+## Screenshots
+
+Assessment screenshots should be stored in:
+
+```text
+../Screenshots/
+```
+
+## Case Study
+
+The findings from this practical scenario will be used to create:
+
+```text
+../Case-Studies/01-Metasploitable2-Security-Assessment.md
+```
+
+---
+
+# Assessment Status
+
+**Status:** Completed
+
+**Target:** `192.168.43.56`
+
+**Network:** `192.168.43.0/24`
+
+**Assessment Type:** Network Discovery & Security Enumeration
+
+**Nmap Version:** `7.99`
+
+**Open TCP Ports:** `23`
+
+**Exploitation Performed:** No
+
+**Evidence Collected:** Yes
+
+**Case Study:** Next stage
+```
