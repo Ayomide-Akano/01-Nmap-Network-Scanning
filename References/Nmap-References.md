@@ -22,7 +22,7 @@ https://nmap.org/
 
 ### Nmap Documentation
 
-[svg](https://nmap.org/docs.html)
+(https://nmap.org/docs.html)
 
 The official Nmap documentation hub containing links to the Reference Guide, Nmap book, installation documentation, NSE documentation, and other resources.
 
@@ -34,7 +34,7 @@ https://nmap.org/docs.html
 
 ### Nmap Reference Guide
 
-[svg](https://nmap.org/book/man.html)
+(https://nmap.org/book/man.html)
 
 The primary command and option reference for Nmap. It covers host discovery, port scanning, service and version detection, OS detection, NSE, timing and performance, firewall/IDS evasion, spoofing, output, and other Nmap functionality.
 
@@ -46,11 +46,11 @@ https://nmap.org/book/man.html
 
 ## Nmap Network Scanning
 
-[svg](https://nmap.org/book/)
+(https://nmap.org/book/)
 
 ### Nmap Network Scanning — The Official Nmap Project Guide
 
-[svg](https://nmap.org/book/)
+(https://nmap.org/book/)
 
 Gordon "Fyodor" Lyon's official guide to Nmap. The book provides detailed explanations of network discovery, port scanning, service detection, OS detection, firewall and IDS evasion, scan optimization, NSE, and practical Nmap usage.
 
@@ -64,7 +64,7 @@ https://nmap.org/book/
 
 ### Nmap Network Scanning — Table of Contents
 
-[svg](https://nmap.org/book/toc.html)
+(https://nmap.org/book/toc.html)
 
 Used as a navigation reference for the official Nmap book and its chapters covering the techniques explored throughout this project.
 
@@ -76,11 +76,11 @@ https://nmap.org/book/toc.html
 
 ## Nmap Scripting Engine (NSE)
 
-[svg](https://nmap.org/nsedoc/)
+(https://nmap.org/nsedoc/)
 
 ### NSE Documentation Portal
 
-[svg](https://nmap.org/nsedoc/)
+(https://nmap.org/nsedoc/)
 
 The official NSE documentation portal containing documentation for Nmap scripts, libraries, and script categories.
 
@@ -92,7 +92,7 @@ https://nmap.org/nsedoc/
 
 ### NSE Usage and Examples
 
-[svg](https://nmap.org/book/nse-usage.html)
+(https://nmap.org/book/nse-usage.html)
 
 Provides documentation for using NSE, including the `-sC` option, `--script`, script categories, script arguments, and other NSE-related options.
 
@@ -104,7 +104,7 @@ https://nmap.org/book/nse-usage.html
 
 ### NSE Categories
 
-[svg](https://nmap.org/nsedoc/categories/)
+(https://nmap.org/nsedoc/categories/)
 
 Documents the categories used to organize NSE scripts, including:
 
@@ -132,7 +132,7 @@ https://nmap.org/nsedoc/categories/
 
 ## Nmap Output and Evidence
 
-[svg](https://nmap.org/book/man.html)
+(https://nmap.org/book/man.html)
 
 The Nmap Reference Guide was used to understand Nmap output formats and evidence preservation, including:
 
@@ -151,7 +151,7 @@ https://nmap.org/book/man.html
 
 ## Networking and Security Concepts
 
-[svg](https://nmap.org/book/)
+(https://nmap.org/book/)
 
 The networking concepts documented in the `Concepts/` directory were studied alongside the Nmap documentation and practical scan results.
 
@@ -176,7 +176,7 @@ https://nmap.org/book/
 
 ## Responsible and Authorized Scanning
 
-[svg](https://nmap.org/book/intro.html)
+(https://nmap.org/book/intro.html)
 
 Nmap documentation discusses legal and responsible use of network scanning and emphasizes the importance of understanding the implications of scanning systems without authorization.
 
