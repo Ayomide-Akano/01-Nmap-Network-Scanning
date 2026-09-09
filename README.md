@@ -190,7 +190,7 @@ Focuses on:
 - Operating system detection
 - Initial target enumeration
 
-[View Scenario 01](./Practical%20Scanning%20Scenarios/Scenario%2001-Host-Discovery-and-Network-Mapping.md)
+[View Scenario 01](./Practical%20Scanning%20Scenarios/Scenario%2001%20-%20Host-Discovery-and-Network-Mapping.md)
 
 ---
 
