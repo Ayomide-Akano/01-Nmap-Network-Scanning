@@ -8,13 +8,13 @@ The diagrams are designed to complement the command reference, concepts, practic
 
 ## Diagrams
 
-### 01. Network Topology  
+### 1. Network Topology  
 
 Illustrates the relationship between the scanning machine, network gateway, lab network, and Metasploitable 2 target. 
 
 --- 
 
-### 02. TCP Three-Way Handshake 
+### 2. TCP Three-Way Handshake 
 
 Illustrates the normal TCP connection process using the SYN, SYN/ACK, and ACK packet exchange. 
 
