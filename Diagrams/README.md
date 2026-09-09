@@ -8,31 +8,43 @@ The diagrams are designed to complement the command reference, concepts, practic
 
 ## Diagrams
 
-### 1. Host Discovery and Network Mapping
+### 01. Network Topology  
+
+Illustrates the relationship between the scanning machine, network gateway, lab network, and Metasploitable 2 target. 
+
+--- 
+
+### 02. TCP Three-Way Handshake 
+
+Illustrates the normal TCP connection process using the SYN, SYN/ACK, and ACK packet exchange. 
+
+---
+
+### 3. Host Discovery and Network Mapping
 
 Illustrates the relationship between the scanning machine, network, gateway, and target during host discovery and network mapping.
 
 ---
 
-### 2. TCP SYN Scan
+### 4. TCP SYN Scan
 
 Explains the TCP SYN half-open scanning process, including the SYN, SYN/ACK, and RST packet exchange used to identify open TCP ports.
 
 ---
 
-### 3. TCP and UDP Visibility
+### 5. TCP and UDP Visibility
 
 Shows how TCP and UDP scanning provide different views of a target's exposed services and why both protocols are considered during a broader assessment.
 
 ---
 
-### 4. Filtering and ACK Analysis
+### 6. Filtering and ACK Analysis
 
 Illustrates how TCP ACK scanning can help distinguish between filtered and unfiltered ports and support analysis of packet filtering behavior.
 
 ---
 
-### 5. NSE Enumeration Workflow
+### 7. NSE Enumeration Workflow
 
 Illustrates the service-driven NSE workflow used in the project:
 
@@ -40,7 +52,7 @@ Illustrates the service-driven NSE workflow used in the project:
 
 ---
 
-### 6. Comprehensive Security Assessment
+### 8. Comprehensive Security Assessment
 
 Illustrates how the individual Nmap assessment stages are combined into a complete security assessment workflow, from host discovery through findings, risk prioritization, and recommendations.
 
