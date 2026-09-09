@@ -54,8 +54,6 @@ UDP scanning can produce states such as:
 
 ### Step 3
 
-[svg](https://github.com/Ayomide-Akano/01-Nmap-Network-Scanning/blob/main/Diagrams/TCP-UDP-Visibility.md#step-3)
-
 The results from both scans are combined to provide a broader view of the target's exposed services.
 
 ---
