@@ -229,7 +229,7 @@ Focuses on:
 - Baseline comparison
 - Packet-filtering behavior
 
-[View Scenario 03](./Practical%20Scanning%20Scenarios/Scenario%2003-Firewall-Evasion-and-Filtering.md)
+[View Scenario 03](./Practical%20Scanning%20Scenarios/Scenario%2003-Firewall-Evasion-and-Filtering-Analysis.md)
 
 ---
 
@@ -248,7 +248,7 @@ Focuses on:
 - Grepable output
 - Evidence preservation
 
-[View Scenario 04](./Practical%20Scanning%20Scenarios/Scenario%2004%20-Scan-Optimization-Timing-and-Output-Formats.md)
+[View Scenario 04](./Practical%20Scanning%20Scenarios/Scenario%2004%20-Scan-Optimization-Timing-&-Output-Formats.md)
 
 ---
 
