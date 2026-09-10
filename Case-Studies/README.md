@@ -127,6 +127,52 @@ This case study demonstrates the transition from performing individual Nmap tech
 
 ---
 
+## Finding ID Convention 
+
+The case studies and final security assessment use finding identifiers at different levels of analysis. 
+
+### Local Case-Study 
+
+Finding IDs Finding IDs used within an individual case study are **local to that case study**. 
+
+For example: 
+
+- `F-05` in Case Study 01 refers to the fifth finding identified within Case Study 01.
+- `F-05` in another case study may refer to a different finding because its numbering is local to that assessment.
+
+These identifiers are used to organize findings within the individual case study where they were identified. 
+
+### Consolidated Finding IDs 
+
+The **Final Security Assessment Report** uses a separate consolidated finding register consisting of `F-01` through `F-14`. 
+
+These IDs represent the final, consolidated findings for the overall assessment and are the authoritative finding identifiers for the portfolio-level security assessment. 
+
+The consolidated register is: 
+
+| ID | Consolidated Finding | Risk | 
+|---|---|---| 
+| F-01 | Excessive Network Attack Surface | High | 
+| F-02 | Anonymous FTP Access | Medium | 
+| F-03 | Plaintext FTP Communication | Medium | 
+| F-04 | Legacy Remote Access Services | High | 
+| F-05 | SMBv1 Supported | High | 
+| F-06 | SMB Message Signing Disabled | High | 
+| F-07 | Anonymous SMB Read/Write Access | High | 
+| F-08 | NFS Service Exposed | High | 
+| F-09 | Legacy Database Services Exposed | High | 
+| F-10 | Legacy Web/Application Services | High | 
+| F-11 | Web Information Disclosure | Medium | 
+| F-12 | SMTP Legacy Security Exposure | Medium | 
+| F-13 | Metasploitable Root Shell Service | Critical | 
+| F-14 | Legacy IRC Service | Medium | 
+
+Therefore, identical finding numbers appearing in different case studies should not be interpreted as referring to the same consolidated finding. 
+
+The **Final Security Assessment Report** should be used as the authoritative source for the consolidated finding register and final risk prioritization. 
+
+---
+
 ## Assessment Approach
 
 The case studies generally follow this process:
