@@ -190,7 +190,7 @@ Focuses on:
 - Operating system detection
 - Initial target enumeration
 
-[View Scenario 01](./Practical%20Scanning%20Scenarios/Scenario%2001%20-%20Host-Discovery-and-Network-Mapping.md)
+[View Scenario 01](./Practical%20Scanning%20Scenarios/Scenario%2001%20-%20Host%20Discovery%20&%20Network%20Mapping.md)
 
 ---
 
@@ -210,7 +210,7 @@ Focuses on:
 - UDP service detection
 - Comparing scan visibility and scope
 
-[View Scenario 02](./Practical%20Scanning%20Scenarios/02-TCP-and-UDP-Port-Scanning.md)
+[View Scenario 02](./Practical%20Scanning%20Scenarios/Scenario%2002-TCP-and-UDP-Port-Scanning.md)
 
 ---
 
@@ -229,7 +229,7 @@ Focuses on:
 - Baseline comparison
 - Packet-filtering behavior
 
-[View Scenario 03](./Practical%20Scanning%20Scenarios/03-Firewall-Evasion-and-Filtering.md)
+[View Scenario 03](./Practical%20Scanning%20Scenarios/Scenario%2003-Firewall-Evasion-and-Filtering.md)
 
 ---
 
@@ -248,7 +248,7 @@ Focuses on:
 - Grepable output
 - Evidence preservation
 
-[View Scenario 04](./Practical%20Scanning%20Scenarios/04-Scan-Optimization-Timing-and-Output-Formats.md)
+[View Scenario 04](./Practical%20Scanning%20Scenarios/Scenario%2004%20-Scan-Optimization-Timing-and-Output-Formats.md)
 
 ---
 
@@ -264,7 +264,7 @@ Focuses on targeted Nmap Scripting Engine enumeration of:
 
 The scenario demonstrates how NSE can provide additional service, configuration, authentication, and security-relevant information beyond basic port scanning.
 
-[View Scenario 05](./Practical%20Scanning%20Scenarios/05-NSE-Service-Enumeration.md)
+[View Scenario 05](./Practical%20Scanning%20Scenarios/Scenario%2005-NSE-Service-Enumeration.md)
 
 ---
 
@@ -296,7 +296,7 @@ It consolidates the evidence and findings generated during Scenarios 01–05 int
 
 > **Important:** Scenario 06 is an analytical capstone based on the evidence generated during Scenarios 01–05. It does not represent a separate laboratory execution or a new set of commands.
 
-[View Scenario 06](./Practical%20Scanning%20Scenarios/06-Comprehensive-Security-Assessment.md)
+[View Scenario 06](./Practical%20Scanning%20Scenarios/Scenario%2006-Comprehensive-Security-Assessment.md)
 
 ---
 
