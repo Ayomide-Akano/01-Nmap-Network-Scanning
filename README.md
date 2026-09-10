@@ -681,7 +681,7 @@ Follow documented assessments from scope and methodology through analysis and se
 
 See how technical observations and findings were transformed into a structured security assessment report.
 
-[Go to Final Report](./report/Final-Security-Assessment-Report.md)
+[Go to Final Report](./Reports/Final-Security-Assessment-Report.md)
 
 ### 8. Consult the References
 
