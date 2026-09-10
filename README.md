@@ -311,9 +311,15 @@ It consolidates the evidence and findings generated during Scenarios 01–05 int
 │
 ├── Concepts/
 │   ├── README.md
+│   ├── ICMP Messages.md
 │   ├── IP-Identification.md
-│   ├── TCP-Reset.md
-│   └── ICMP-Messages.md
+│   ├── TCP Flags.md
+│   ├── TCP Reset (RST).md
+│   ├── TCP Three-Way Handshake.md
+│   ├── TCP-Initial-Sequence-Number.md
+│   ├── TCP-Options.md
+│   ├── TCP-Window-Size.md
+│   └── Time-To-Live.md
 │
 ├── Diagrams/
 │   ├── README.md
@@ -374,11 +380,14 @@ Contains concise explanations of networking and Nmap-related concepts used throu
 
 Topics include:
 
-- IP identification
-- TCP behavior
+- ICMP Messages
+- TCP Flags.md
 - TCP Reset (RST)
-- ICMP messages
-- Port and packet behavior
+- TCP Three-Way Handshake
+- TCP-Options
+- TCP-Window-Size
+- Time-To-Live
+- TCP-Initial-Sequence-Number
 
 **Purpose:** Understand the networking principles behind the scanning techniques.
 
