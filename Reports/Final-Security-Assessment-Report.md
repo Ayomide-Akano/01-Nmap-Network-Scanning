@@ -38,6 +38,49 @@ No destructive testing or unauthorized exploitation was performed.
 
 ---
 
+## Finding ID Convention
+
+Finding identifiers are used at two different levels within this portfolio.
+
+### Case-Study Finding IDs
+
+Finding IDs appearing inside individual case studies are local to the specific case study in which they are documented.
+
+For example, an `F-05` appearing in Case Study 01 refers to the fifth finding identified within Case Study 01. The same identifier may refer to a different finding in another case study.
+
+These local identifiers are used to organize and reference findings within the individual assessment.
+
+### Consolidated Finding IDs
+
+The findings listed in the **Security Findings** section of this report use a separate consolidated identifier system from `F-01` through `F-14`.
+
+These identifiers represent the final consolidated findings for the overall assessment and are the authoritative finding identifiers for this report.
+
+The consolidated finding register is:
+
+| ID | Finding | Risk |
+|---|---|---|
+| F-01 | Excessive Network Attack Surface | High |
+| F-02 | Anonymous FTP Access | Medium |
+| F-03 | Plaintext FTP Communication | Medium |
+| F-04 | Legacy Remote Access Services | High |
+| F-05 | SMBv1 Supported | High |
+| F-06 | SMB Message Signing Disabled | High |
+| F-07 | Anonymous SMB Read/Write Access | High |
+| F-08 | NFS Service Exposed | High |
+| F-09 | Legacy Database Services Exposed | High |
+| F-10 | Legacy Web/Application Services | High |
+| F-11 | Web Information Disclosure | Medium |
+| F-12 | SMTP Legacy Security Exposure | Medium |
+| F-13 | Metasploitable Root Shell Service | Critical |
+| F-14 | Legacy IRC Service | Medium |
+
+The consolidated finding IDs should therefore be used when referring to the overall security assessment, risk prioritization, and final remediation strategy.
+
+Individual case-study finding IDs should be interpreted within the context of their respective case study.
+
+---
+
 ## Objective
 
 The objective of the assessment was to demonstrate a structured Nmap-based security assessment process and determine what could be learned about an intentionally vulnerable host through network scanning and service enumeration.
