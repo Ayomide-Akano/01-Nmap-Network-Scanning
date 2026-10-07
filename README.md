@@ -1,4 +1,11 @@
 # Nmap Network Scanning Lab
+## Key Results
+
+- **Target:** Metasploitable 2 in an authorized virtualized lab (Kali Linux, Nmap 7.99)
+- **Findings:** 14 security findings: 1 Critical, 8 High, 5 Medium
+- **Overall rating:** HIGH RISK
+- **Most critical exposure:** root shell service open on TCP port 1524
+- **Full report:** [Final Security Assessment Report](Reports/Final-Security-Assessment-Report.md)
 
 A practical network reconnaissance and security assessment project demonstrating the use of Nmap for host discovery, TCP and UDP port scanning, service and version enumeration, operating system detection, Nmap Scripting Engine (NSE)-based reconnaissance, network filtering analysis, scan optimization, evidence collection, and structured security documentation.
 
