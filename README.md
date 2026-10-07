@@ -349,7 +349,7 @@ It consolidates the evidence and findings generated during Scenarios 01–05 int
 │   ├── README.md
 │   └── Scenario-01–05 evidence
 │
-├── report/
+├── Report/
 │   └── Final-Security-Assessment-Report.md
 │
 └── README.md
